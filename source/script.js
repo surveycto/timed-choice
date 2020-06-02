@@ -12,6 +12,8 @@ const choiceContainers = document.querySelectorAll('.choice-container') // go th
 const timerDisp = document.querySelector('#timerdisp')
 const unitDisp = document.querySelector('#unitdisp')
 
+// PARAMETERS and their defaults
+
 var dispTimer = getPluginParameter('disp')
 if (dispTimer == 0) {
   dispTimer = false
@@ -48,9 +50,15 @@ if (resume == 0) {
 var autoAdvance = getPluginParameter('advance')
 if (autoAdvance == 0) {
   autoAdvance = false
-}
-else {
+} else {
   autoAdvance = true
+}
+
+var block = getPluginParameter('block')
+if (block == 0) {
+  block = false
+} else {
+  block = true
 }
 
 var leftoverTime = parseInt(getMetaData())
@@ -290,7 +298,9 @@ function checkComplete (cur) {
 }
 
 function blockInput () {
-  for (const b of allBoxes) {
-    b.disabled = true
+  if (block) {
+    for (const b of allBoxes) {
+      b.disabled = true
+    }
   }
 }
