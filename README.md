@@ -59,14 +59,15 @@ To create your own field plug-in using this as a template, follow these steps:
 **Important:** You need to include a choice with the value of `-99`. This choice will be hidden by the field plug-in, but it will be selected if the time runs out without a choice selected.
 
 ## Parameters
-There are five parameters, but all of them are optional:
+There are several parameters, but all of them are optional
 
 |**Name**|**Description**|**Default**|
 |---|---|---|
-|`disp`|Whether the timer should be displayed or not. Most of the time, this parameter should not be included, since the timer should almost always be displayed. Howerver, if it should not displayed for some reason, such as if it is within a field list, and it is not the top field in a field list, then this parameter should have a value of `0`.|`1`|
 |`duration`|Time in seconds before the field auto-advances. No matter what unit is used for parameter 2, you should always enter the duration in seconds.|`10`|
 |`unit`|Only needed for the first field in the field list. Unit to be displayed for the time remaining. The time will be shown as the correct converted version. For example, if the start time is 15 seconds, and the unit is `'ms'` for milliseconds, the time will be displayed at the start as `15000`.|`'s'`|
+|`disp`|Whether the timer should be displayed or not. Most of the time, this parameter should not be included, since the timer should almost always be displayed. Howerver, if it should not displayed for some reason, such as if it is within a field list, and it is not the top field in a field list, then this parameter should have a value of `0`.|`1`|
 |`pass`|The value the field will be given if time runs out before an answer is given.|`-99`|
+|`advance`|Whether the field should auto-advance after time runs out. By default (such as if the parameter is not specified), when time runs out, the field will automatically advance, and the enumerator/respondent will not be able to return. If this parameter is equal to `0`, then the field will not auto-advance when time runs out.|`1`|
 |`resume`|Whether a respondent can return to a field and continue with the time they have left. For example, if there was 5 seconds remaining when they swiped forward, they can return to that field and work with that remaining 5 seconds. To allow this, give this parameter a value of `1`.|`0`|
 
 For the `unit` parameter, you can use the following display units:

@@ -45,6 +45,14 @@ if (resume == 0) {
   resume = true
 }
 
+var autoAdvance = getPluginParameter('advance')
+if (autoAdvance == 0) {
+  autoAdvance = false
+}
+else {
+  autoAdvance = true
+}
+
 var leftoverTime = parseInt(getMetaData())
 
 var startTime // This will get an actual value when the timer starts in startStopTimer()
@@ -238,7 +246,9 @@ function timer () {
       setAnswer(missed)
     }
     setMetaData(0)
-    goToNextField()
+    if (autoAdvance) {
+      goToNextField()
+    }
   }
   setMetaData(timeLeft)
 
@@ -270,7 +280,10 @@ function establishTimeLeft () { // This checks the current answer and leftover t
 function checkComplete (cur) {
   if (cur.length !== 0) {
     complete = true
-    goToNextField()
+    blockInput()
+    if (autoAdvance) {
+      goToNextField()
+    }
   } else {
     complete = false
   }
