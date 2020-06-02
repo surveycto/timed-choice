@@ -1,4 +1,4 @@
-/* global fieldProperties, setAnswer, goToNextField, getPluginParameter */
+/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
 const choices = fieldProperties.CHOICES
 const appearance = fieldProperties.APPEARANCE
@@ -234,7 +234,7 @@ function timer () {
     timeLeft = 0
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
 
-    if ((currentAnswer == null) || (currentAnswer == '') || (Array.isArray(currentAnswer) && (currentAnswer.length === 0))) {
+    if ((currentAnswer == null) || (currentAnswer === '') || (Array.isArray(currentAnswer) && (currentAnswer.length === 0))) {
       setAnswer(missed)
     }
     setMetaData(0)
