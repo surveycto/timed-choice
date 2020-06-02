@@ -1,35 +1,74 @@
-/* global fieldProperties, setAnswer, goToNextField */
+/* global fieldProperties, setAnswer, goToNextField, getPluginParameter */
 
 const choices = fieldProperties.CHOICES
 const appearance = fieldProperties.APPEARANCE
 const fieldType = fieldProperties.FIELDTYPE
 const numChoices = choices.length
 
-var radioButtonsContainer = document.getElementById('radio-buttons-container') // default radio buttons
-var selectDropDownContainer = document.getElementById('select-dropdown-container') // minimal appearance
-var likertContainer = document.getElementById('likert-container') // likert
+const radioButtonsContainer = document.getElementById('radio-buttons-container') // default radio buttons
+const selectDropDownContainer = document.getElementById('select-dropdown-container') // minimal appearance
+const likertContainer = document.getElementById('likert-container') // likert
 const choiceContainers = document.querySelectorAll('.choice-container') // go through all the available choices
+const timerDisp = document.querySelector('#timerdisp')
+const unitDisp = document.querySelector('#unitdisp')
+
+var dispTimer = getPluginParameter('disp')
+if (dispTimer == 0) {
+  dispTimer = false
+  document.querySelector('#timerContainer').style.display = 'none'
+} else {
+  dispTimer = true
+}
+
+var timeStart = getPluginParameter('duration')
+if ((timeStart == null) || isNaN(timeStart)) {
+  timeStart = 10000
+} else {
+  timeStart *= 1000
+}
+
+var unit = getPluginParameter('unit')
+if (unit == null) {
+  unit = 's'
+}
+unitDisp.innerHTML = unit
+
+var missed = getPluginParameter('pass')
+if (missed == null) {
+  missed = -99
+}
+
+var resume = getPluginParameter('continue')
+if (resume == 0) {
+  resume = false
+} else {
+  resume = true
+}
+
+var leftoverTime = parseInt(getMetaData())
 
 var startTime // This will get an actual value when the timer starts in startStopTimer()
-var timeStart = 10000 // Default values may be overwritten depending on the number of paramaters given,
-var unit = 's' // Default, may be changed
 var round = 1000 // Default, may be changed
-var missed = -99 // Default, may be changed
 var timeLeft // Starts this way for the display.
 var timePassed = 0 // Time passed so far
+var error = false
+var complete = false
+var currentAnswer
 
+var allBoxes = document.querySelectorAll('input')
 
+// ADJUST APPEARANCES
 
 if (fieldType === 'select_multiple') { // Changes input type
   for (let c = 0; c < numChoices; c++) {
     const choice = choices[c]
-    const container = choiceContainers[c]
-    const box = container.querySelector('INPUT')
+    const box = allBoxes[c]
     box.type = 'checkbox'
     if (choice.CHOICE_SELECTED) {
-      box.checked = true
+      box.checked = true // Selects choices that have already been selected
     }
   }
+  gatherAnswer()
 }
 
 // Prepare the current webview, making adjustments for any appearance options
@@ -97,6 +136,22 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   }
 }
 
+// Timing calculations
+if (unit === 'ms') {
+  unit = 'milliseconds'
+  round = 1
+} else if (unit === 'cs') {
+  unit = 'centiseconds'
+  round = 10
+} else if (unit === 'ds') {
+  unit = 'deciseconds'
+  round = 100
+} else {
+  unit = 'seconds'
+  round = 1000
+}
+
+establishTimeLeft()
 
 if (!error) {
   setInterval(timer, 1)
@@ -130,14 +185,19 @@ function change () {
       goToNextField()
     }
   } else {
-    const selected = []
-    for (let c = 0; c < numChoices; c++) {
-      if (choiceContainers[c].querySelector('INPUT').checked === true) {
-        selected.push(choices[c].CHOICE_VALUE)
-      }
-    }
-    setAnswer(selected.join(' '))
+    gatherAnswer()
   }
+}
+
+function gatherAnswer () {
+  const selected = []
+  for (let c = 0; c < numChoices; c++) {
+    if (allBoxes[c].checked === true) {
+      selected.push(choices[c].CHOICE_VALUE)
+    }
+  }
+  currentAnswer = selected.join(' ')
+  setAnswer(currentAnswer)
 }
 
 // If the field label or hint contain any HTML that isn't in the form definition, then the < and > characters will have been replaced by their HTML character entities, and the HTML won't render. We need to turn those HTML entities back to actual < and > characters so that the HTML renders properly. This will allow you to render HTML from field references in your field label or hint.
@@ -145,7 +205,7 @@ function unEntity (str) {
   return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
 }
 if (fieldProperties.LABEL) {
-  document.querySelector('.label').innerHTML = unEntity(fieldProperties.LABEL)
+  document.querySelector('#label').innerHTML = unEntity(fieldProperties.LABEL)
 }
 if (fieldProperties.HINT) {
   document.querySelector('.hint').innerHTML = unEntity(fieldProperties.HINT)
@@ -160,6 +220,8 @@ function isRTL (s) {
   return rtlDirCheck.test(s)
 }
 
+// TIME FUNCTIONS
+
 function timer () {
   if (!complete) {
     timePassed = Date.now() - startTime
@@ -167,11 +229,12 @@ function timer () {
   }
 
   if (timeLeft < 0) { // Timer ended
+    blockInput()
     complete = true
     timeLeft = 0
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
 
-    if ((currentAnswer == null) || (Array.isArray(currentAnswer) && (currentAnswer.length === 0))) {
+    if ((currentAnswer == null) || (currentAnswer == '') || (Array.isArray(currentAnswer) && (currentAnswer.length === 0))) {
       setAnswer(missed)
     }
     setMetaData(0)
@@ -180,4 +243,41 @@ function timer () {
   setMetaData(timeLeft)
 
   timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
+}
+
+function establishTimeLeft () { // This checks the current answer and leftover time, and either auto-advances if there is no time left, or establishes how much time is left.
+  if ((currentAnswer !== '') && (!resume)) {
+    complete = true
+    timeLeft = 0
+    blockInput()
+  } else {
+    if ((leftoverTime == null) || (leftoverTime === '') || isNaN(leftoverTime)) {
+      checkComplete(currentAnswer)
+      startTime = Date.now()
+      timeLeft = timeStart
+    } else if (isNaN(leftoverTime)) {
+      checkComplete(currentAnswer)
+      startTime = Date.now()
+      timeLeft = timeStart
+    } else {
+      complete = false
+      timeLeft = parseInt(leftoverTime)
+      startTime = Date.now() - (timeStart - timeLeft)
+    }
+  } // End ELSE
+} // End establishTimeLeft
+
+function checkComplete (cur) {
+  if (cur.length !== 0) {
+    complete = true
+    goToNextField()
+  } else {
+    complete = false
+  }
+}
+
+function blockInput () {
+  for (const b of allBoxes) {
+    b.disabled = true
+  }
 }
