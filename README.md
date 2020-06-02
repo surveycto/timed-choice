@@ -63,13 +63,13 @@ There are five parameters, but all of them are optional:
 
 |**Name**|**Description**|**Default**|
 |---|---|---|
-|`top`|Whether this is the top field of the field list. This shows where the timer should go. The first field should have a value of `1` for this parameter, and the others should not use this parameter at all.|`0`|
+|`disp`|Whether the timer should be displayed or not. Most of the time, this parameter should not be included, since the timer should almost always be displayed. Howerver, if it should not displayed for some reason, such as if it is within a field list, and it is not the top field in a field list, then this parameter should have a value of `0`.|`1`|
 |`duration`|Time in seconds before the field auto-advances. No matter what unit is used for parameter 2, you should always enter the duration in seconds.|`10`|
 |`unit`|Only needed for the first field in the field list. Unit to be displayed for the time remaining. The time will be shown as the correct converted version. For example, if the start time is 15 seconds, and the unit is `'ms'` for milliseconds, the time will be displayed at the start as `15000`.|`'s'`|
 |`pass`|The value the field will be given if time runs out before an answer is given.|`-99`|
-|`continue`|Whether a respondent can return to a field and continue with the time they have left. For example, if there was 5 seconds remaining when they swiped forward, they can return to that field and work with that remaining 5 seconds. To allow this, give this parameter a value of `1`.|`0`|
+|`resume`|Whether a respondent can return to a field and continue with the time they have left. For example, if there was 5 seconds remaining when they swiped forward, they can return to that field and work with that remaining 5 seconds. To allow this, give this parameter a value of `1`.|`0`|
 
-For parameter 2, you can use the following display units:
+For the `unit` parameter, you can use the following display units:
 
 |**Abbr.**|**Full name**|**Unit in 1 second**|
 |:---|:---|:---|
@@ -93,6 +93,20 @@ If the field is of type *select_one*, you would like it to have the `quick` appe
 If you would like the respondent to have 15 seconds to complete the field, but they can return to it later to change their answer with their remaining time, you can use this *appearance*:
 
     quick custom-timedadvance(duration=15, unit='s', pass=-99, continue=1)
+
+### Working with field lists
+
+This field plug-in works well with field lists. 
+
+#### All fields but the top
+
+Besides the top field, each field should have a `disp` value of `0`. That way, the timer is not shown for each field.
+
+You also don't need the `unit` parameter for these fields. However, it does not hurt to have them.
+
+#### All fields
+
+All fields should have the same `duration` value. To make sure of this, it may be a good idea to store the duration in a field (such as a *calculate* field), and then use a field reference to that field in each `duration` value in the field list. That way, it is easy to keep track of and change the duration of each field in the field list.
 
 ## More resources
 
