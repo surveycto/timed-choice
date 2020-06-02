@@ -61,7 +61,7 @@ To create your own field plug-in using this as a template, follow these steps:
 ## Parameters
 There are five parameters, but all of them are optional:
 
-|**Number**|**Name**|**Description**|**Default**|
+|**Name**|**Description**|**Default**|
 |---|---|---|
 |`top`|Whether this is the top field of the field list. This shows where the timer should go. The first field should have a value of `1` for this parameter, and the others should not use this parameter at all.|`0`|
 |`duration`|Time in seconds before the field auto-advances. No matter what unit is used for parameter 2, you should always enter the duration in seconds.|`10`|
