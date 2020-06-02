@@ -59,7 +59,7 @@ To create your own field plug-in using this as a template, follow these steps:
 **Important:** You need to include a choice with the value of `-99`. This choice will be hidden by the field plug-in, but it will be selected if the time runs out without a choice selected.
 
 ## Parameters
-There are several parameters, but all of them are optional
+There are several parameters, but all of them are optional. The most important parameter is the `duration` parameter, but the other parameters can help you further customize the field with ease. Feel free to leave the parameter out if you do not need it.
 
 |**Name**|**Description**|**Default**|
 |---|---|---|
