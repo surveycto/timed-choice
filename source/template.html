@@ -1,6 +1,7 @@
-<link rel="stylesheet" type="text/css" href="style.css">
-<script src="script.js" charset="UTF-8" defer></script>
-<table class="label default-question-text-size timer">
+<!--link rel="stylesheet" type="text/css" href="style.css">
+<script src="script.js" charset="UTF-8" defer></script-->
+<div id="error" style="color:#b50000"></div>
+<table class="label default-question-text-size timer" id="timer-container">
   <tr>
     <td style="padding-left:30px;" dir="auto">TIME LEFT: </td>
     <td id="timerdisp" style="width: 30px;text-align:right"></td>
@@ -30,7 +31,7 @@
 </video>
 {{/MEDIAVIDEO}}
 
-<div class="hint default-hint-text-size" dir="auto">{{{HINT}}}</div>
+<div class="hint default-hint-text-size" id="hint" dir="auto">{{{HINT}}}</div>
 
 <!-- This is the input area that will be shown by default -->
 <form class="choices-container" id="radio-buttons-container" dir="auto">
@@ -93,20 +94,36 @@
 </div>
 
 <!-- This is what will be shown if the field has the 'label' appearance -->
-<div class="choice-labels">
-
-</div>
-
-<!-- This is what will be shown if the field has the 'list-nolabel' appearance -->
-<div class="list-nolabel">
+<div class="choice-labels" id="choice-labels">
   <table>
     <tr>
       <td>{{{LABEL}}}</td>
-    {{#CHOICES}}
-      <td>
-
+      {{#CHOICES}}
+      <td id="choice-{{CHOICE_VALUE}}">
+        {{CHOICE_LABEL}}
       </td>
-    {{/CHOICES}}
+      {{/CHOICES}}
+    </tr>
+  </table>
+</div>
+
+<!-- This is what will be shown if the field has the 'list-nolabel' appearance -->
+<div class="list-nolabel" id="list-nolabel">
+  <table>
+    <tr>
+      <td>{{{LABEL}}}</td>
+      {{#CHOICES}}
+      <td id="choice-{{CHOICE_VALUE}}">
+        <input
+               type="radio"
+               value="{{CHOICE_VALUE}}"
+               name="opt"
+               class="choice-input"
+               id="{{CHOICE_INDEX}}"
+               {{#CHOICE_SELECTED}}checked="checked" {{/CHOICE_SELECTED}}
+               {{#READONLY}}disabled{{/READONLY}} />
+      </td>
+      {{/CHOICES}}
     </tr>
   </table>
 </div>
