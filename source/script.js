@@ -16,9 +16,9 @@ class Choice {
 
 var fieldProperties = {
   CHOICES: [
-    new Choice(0, 0, 'Choice 1'),
+    new Choice(0, 0, 'Choice 1') /*,
     new Choice(1, 1, 'Choice 2'),
-    new Choice(2, 2, 'Choice 3')
+    new Choice(2, 2, 'Choice 3') */
   ],
   METADATA: '',
   LABEL: 'This is a label',
@@ -151,8 +151,8 @@ if (fieldType === 'select_multiple') { // Changes input type
       box.checked = true // Selects choices that have already been selected
     }
   }
-  gatherAnswer()
 }
+gatherAnswer()
 
 // Prepare the current webview, making adjustments for any appearance options
 if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) { // minimal appearance
@@ -270,6 +270,7 @@ function clearAnswer () {
 function change () {
   if (fieldType === 'select_one') {
     setAnswer(this.value)
+    currentAnswer = this.value
     // If the appearance is 'quick', then also progress to the next field
     if (appearance.includes('quick') === true) {
       goToNextField()
