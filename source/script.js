@@ -1,3 +1,70 @@
+// Put this at the top of your script when testing in a web browser
+class Choice {
+  constructor (value, index, label, selected, image) {
+
+    this.CHOICE_INDEX = index
+    this.CHOICE_VALUE = value
+    this.CHOICE_LABEL = label
+    if (selected) {
+      selected = true
+    } else {
+      selected = false
+    }
+    this.CHOICE_IMAGE = image
+  }
+}
+
+var fieldProperties = {
+  CHOICES: [
+    new Choice(0, 0, 'Choice 1'),
+    new Choice(1, 1, 'Choice 2'),
+    new Choice(2, 2, 'Choice 3')
+  ],
+  METADATA: '',
+  LABEL: 'This is a label',
+  HINT: 'This is a hint',
+  PARAMETERS: [
+    {
+      key: 'duration',
+      value: 5
+    }
+  ],
+  FIELDTYPE: 'select_one',
+  APPEARANCE: 'list-nolabel',
+  LANGUAGE: 'english'
+}
+
+function setAnswer (ans) {
+  console.log('Set answer to: ' + ans)
+}
+
+function setMetaData (string) {
+  fieldProperties.METADATA = string
+}
+
+function getMetaData () {
+  return fieldProperties.METADATA
+}
+
+function getPluginParameter (param) {
+  const parameters = fieldProperties.PARAMETERS
+  if (parameters != null) {
+    for (const p of fieldProperties.PARAMETERS) {
+      const key = p.key
+      if (key == param) {
+        return p.value
+      } // End IF
+    } // End FOR
+  } // End IF
+}
+
+function goToNextField () {
+  console.log('Skipped to next field')
+}
+// document.body.classList.add('android-collect')
+// Above for testing only */
+
+
 /* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
 const choices = fieldProperties.CHOICES
@@ -105,7 +172,14 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
     likertChoices[0].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-first') // apply a special class to the first choice label
     likertChoices[likertChoices.length - 1].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-last') // apply a special class to the last choice label
   }
-} else { // all other appearances
+} else if (appearance.includes('label')) {
+  selectDropDownContainer.parentElement.removeChild(selectDropDownContainer) // remove the select dropdown container
+  likertContainer.parentElement.removeChild(likertContainer) // remove the likert container
+} else if (appearance.includes('list-nolabel')) {
+  selectDropDownContainer.parentElement.removeChild(selectDropDownContainer) // remove the select dropdown container
+  likertContainer.parentElement.removeChild(likertContainer) // remove the likert container
+}
+else { // all other appearances
   if (fieldProperties.LANGUAGE !== null && isRTL(fieldProperties.LANGUAGE)) {
     radioButtonsContainer.dir = 'rtl'
   }
