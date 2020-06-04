@@ -16,54 +16,53 @@ class Choice {
 
 var fieldProperties = {
   CHOICES: [
-    new Choice(0, 0, 'Choice 1') /*,
-    new Choice(1, 1, 'Choice 2'),
-    new Choice(2, 2, 'Choice 3') */ /*
-],
-METADATA: '',
-LABEL: 'This is a label',
-HINT: 'This is a hint',
-PARAMETERS: [
-{
-key: 'duration',
-value: 5
-}
-],
-FIELDTYPE: 'select_one',
-APPEARANCE: 'list-nolabel',
-LANGUAGE: 'english'
+    new Choice('1', 0, 'Yes'),
+    new Choice('0', 0, 'No'),
+    new Choice('-99', 0, 'Pass'),
+  ],
+  METADATA: '',
+  LABEL: 'This is a label',
+  HINT: 'This is a hint',
+  PARAMETERS: [
+    {
+      key: 'duration',
+      value: 5
+    }
+  ],
+  FIELDTYPE: 'select_one',
+  APPEARANCE: 'list-nolabel',
+  LANGUAGE: 'english'
 }
 
 function setAnswer (ans) {
-console.log('Set answer to: ' + ans)
+  console.log('Set answer to: ' + ans)
 }
 
 function setMetaData (string) {
-fieldProperties.METADATA = string
+  fieldProperties.METADATA = string
 }
 
 function getMetaData () {
-return fieldProperties.METADATA
+  return fieldProperties.METADATA
 }
 
 function getPluginParameter (param) {
-const parameters = fieldProperties.PARAMETERS
-if (parameters != null) {
-for (const p of fieldProperties.PARAMETERS) {
-const key = p.key
-if (key == param) {
-return p.value
-} // End IF
-} // End FOR
-} // End IF
+  const parameters = fieldProperties.PARAMETERS
+  if (parameters != null) {
+    for (const p of fieldProperties.PARAMETERS) {
+      const key = p.key
+      if (key == param) {
+        return p.value
+      } // End IF
+    } // End FOR
+  } // End IF
 }
 
 function goToNextField () {
-console.log('Skipped to next field')
+  console.log('Skipped to next field')
 }
 // document.body.classList.add('android-collect')
 // Above for testing only */
-
 
 /* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
@@ -194,7 +193,7 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   labelContainer.parentElement.removeChild(labelContainer)
   hintContainer.parentElement.removeChild(hintContainer)
   const passTd = document.querySelector('#choice-' + String(missed))
-  passTd.parentElement.removeChild(passTd)  // Remove the pass value as a label
+  passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 } else if (appearance.includes('label')) {
   removeContainer('label')
   labelContainer.parentElement.removeChild(labelContainer)

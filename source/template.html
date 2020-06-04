@@ -96,10 +96,11 @@
 <!-- This is what will be shown if the field has the 'label' appearance -->
 <div class="choice-labels" id="choice-labels">
   <table>
+    <col>
     <tr>
       <td>{{{LABEL}}}</td>
       {{#CHOICES}}
-      <td id="choice-{{CHOICE_VALUE}}">
+      <td class="header" id="choice-{{CHOICE_VALUE}}">
         {{CHOICE_LABEL}}
       </td>
       {{/CHOICES}}
@@ -110,10 +111,11 @@
 <!-- This is what will be shown if the field has the 'list-nolabel' appearance -->
 <div class="list-nolabel" id="list-nolabel">
   <table>
+    <col>
     <tr>
       <td>{{{LABEL}}}</td>
       {{#CHOICES}}
-      <td id="choice-{{CHOICE_VALUE}}">
+      <td class="fl-radio" id="choice-{{CHOICE_VALUE}}">
         <input
                type="radio"
                value="{{CHOICE_VALUE}}"

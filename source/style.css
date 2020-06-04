@@ -241,6 +241,63 @@
 .likert-min-choice-label-last * {
     text-align: right;
 }
+
+/* label and list-nolabel appearances */
+div.label table, div.list-nolabel table {
+    width: 100%
+}
+
+.label, .list-nolabel {
+    margin: 0
+}
+
+.choice-labels, .list-nolabel {
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    text-align: left;
+}
+
+.choice-labels col, .list-nolabel col {
+    width: auto;
+}
+
+.header, .fl-radio {
+    width: 30px;
+}
+
+
+.choice-labels td, .list-nolabel td {
+
+}
+
+.fl-radio {
+    text-align: center;
+    width: 30px;
+}
+
+/* label appearance */
+.choice-labels {
+
+}
+
+.choice-labels td{
+}
+
+.header {
+    text-align: left;
+}
+
+
+/* list-nolabel appearance */
+.list-nolabel {
+    text-align: center;
+}
+
+.list-nolabel td{ 
+
+}
+
 /*
     ------------------------
     Other global styles
