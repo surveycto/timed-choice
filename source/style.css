@@ -258,8 +258,8 @@ div.label table, div.list-nolabel table {
     text-align: left;
 }
 
-.choice-labels col, .list-nolabel col {
-    width: auto;
+.fl-label {
+    text-align: left;
 }
 
 .header, .fl-radio {

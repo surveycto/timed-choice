@@ -96,9 +96,8 @@
 <!-- This is what will be shown if the field has the 'label' appearance -->
 <div class="choice-labels" id="choice-labels">
   <table>
-    <col>
     <tr>
-      <td>{{{LABEL}}}</td>
+      <td class="fl-label">{{{LABEL}}}</td>
       {{#CHOICES}}
       <td class="header" id="choice-{{CHOICE_VALUE}}">
         {{CHOICE_LABEL}}
@@ -111,9 +110,8 @@
 <!-- This is what will be shown if the field has the 'list-nolabel' appearance -->
 <div class="list-nolabel" id="list-nolabel">
   <table>
-    <col>
     <tr>
-      <td>{{{LABEL}}}</td>
+      <td class="fl-label">{{{LABEL}}}</td>
       {{#CHOICES}}
       <td class="fl-radio" id="choice-{{CHOICE_VALUE}}">
         <input
