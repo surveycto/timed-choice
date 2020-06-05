@@ -1,69 +1,3 @@
-/* // Put this at the top of your script when testing in a web browser
-class Choice {
-  constructor (value, index, label, selected, image) {
-
-    this.CHOICE_INDEX = index
-    this.CHOICE_VALUE = value
-    this.CHOICE_LABEL = label
-    if (selected) {
-      selected = true
-    } else {
-      selected = false
-    }
-    this.CHOICE_IMAGE = image
-  }
-}
-
-var fieldProperties = {
-  CHOICES: [
-    new Choice('1', 0, 'Yes'),
-    new Choice('0', 0, 'No'),
-    new Choice('-99', 0, 'Pass'),
-  ],
-  METADATA: '',
-  LABEL: 'This is a label',
-  HINT: 'This is a hint',
-  PARAMETERS: [
-    {
-      key: 'duration',
-      value: 5
-    }
-  ],
-  FIELDTYPE: 'select_one',
-  APPEARANCE: 'list-nolabel',
-  LANGUAGE: 'english'
-}
-
-function setAnswer (ans) {
-  console.log('Set answer to: ' + ans)
-}
-
-function setMetaData (string) {
-  fieldProperties.METADATA = string
-}
-
-function getMetaData () {
-  return fieldProperties.METADATA
-}
-
-function getPluginParameter (param) {
-  const parameters = fieldProperties.PARAMETERS
-  if (parameters != null) {
-    for (const p of fieldProperties.PARAMETERS) {
-      const key = p.key
-      if (key == param) {
-        return p.value
-      } // End IF
-    } // End FOR
-  } // End IF
-}
-
-function goToNextField () {
-  console.log('Skipped to next field')
-}
-// document.body.classList.add('android-collect')
-// Above for testing only */
-
 /* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
 const choices = fieldProperties.CHOICES
@@ -82,13 +16,33 @@ const likertContainer = document.querySelector('#likert-container') // likert
 const choiceLabelContainer = document.querySelector('#choice-labels')
 const listNoLabelContainer = document.querySelector('#list-nolabel')
 
-const choiceContainers = document.querySelectorAll('.choice-container') // go through all the available choices
-const timerDisp = document.querySelector('#timerdisp')
-const unitDisp = document.querySelector('#unitdisp')
+const choiceContainers = document.querySelectorAll('.choice-container') // Go through all the available choices
+const timerDisp = timerContainer.querySelector('#timerdisp')
+const unitDisp = timerContainer.querySelector('#unitdisp')
 
 // PARAMETERS and their defaults
 
 var dispTimer = getPluginParameter('disp')
+var timeStart = getPluginParameter('duration')
+var unit = getPluginParameter('unit')
+var missed = getPluginParameter('pass')
+var resume = getPluginParameter('continue')
+var autoAdvance = getPluginParameter('advance')
+var block = getPluginParameter('block')
+var leftoverTime = parseInt(getMetaData())
+
+var startTime // This will get an actual value when the timer starts in startStopTimer()
+var round = 1000 // Default, may be changed
+var timeLeft // Starts this way for the display.
+var timePassed = 0 // Time passed so far
+var complete = false
+var currentAnswer
+
+var allBoxes = document.querySelectorAll('input')
+
+var allChoices = []
+
+// Setup defaults of parameters if they are not defined
 if (dispTimer == 0) {
   dispTimer = false
   timerContainer.parentElement.removeChild(timerContainer)
@@ -96,59 +50,40 @@ if (dispTimer == 0) {
   dispTimer = true
 }
 
-var timeStart = getPluginParameter('duration')
 if ((timeStart == null) || isNaN(timeStart)) {
   timeStart = 10000
 } else {
   timeStart *= 1000
 }
 
-var unit = getPluginParameter('unit')
 if (unit == null) {
   unit = 's'
 }
 unitDisp.innerHTML = unit
 
-var missed = getPluginParameter('pass')
 if (missed == null) {
   missed = -99
 }
 
-var resume = getPluginParameter('continue')
 if (resume == 0) {
   resume = false
 } else {
   resume = true
 }
 
-var autoAdvance = getPluginParameter('advance')
 if ((autoAdvance == 0) || ((!dispTimer) && (autoAdvance != 1))) {
   autoAdvance = false
 } else {
   autoAdvance = true
 }
 
-var block = getPluginParameter('block')
 if (block == 0) {
   block = false
 } else {
   block = true
 }
 
-var leftoverTime = parseInt(getMetaData())
-
-var startTime // This will get an actual value when the timer starts in startStopTimer()
-var round = 1000 // Default, may be changed
-var timeLeft // Starts this way for the display.
-var timePassed = 0 // Time passed so far
-var error = false
-var complete = false
-var currentAnswer
-
-var allBoxes = document.querySelectorAll('input')
-
 // Check to make sure "pass" value is a choice value
-var allChoices = []
 for (const c of choices) {
   allChoices.push(c.CHOICE_VALUE)
 }
@@ -261,10 +196,7 @@ if (unit === 'ms') {
 }
 
 establishTimeLeft()
-
-if (!error) {
-  setInterval(timer, 1)
-}
+setInterval(timer, 1)
 
 // FUNCTIONS
 function clearAnswer () {
@@ -283,8 +215,10 @@ function clearAnswer () {
       selectedOption.parentElement.classList.remove('selected')
     }
   }
+  setAnswer('')
 }
 
+// Removed the containers that are not to be used
 function removeContainer (keep) {
   if (keep !== 'radio') {
     radioButtonsContainer.parentElement.removeChild(radioButtonsContainer) // remove the default radio buttons
@@ -419,6 +353,7 @@ function checkComplete (cur) {
   }
 }
 
+// Makes radio/check buttons unusable if that setting is turned on
 function blockInput () {
   if (block) {
     for (const b of allBoxes) {
