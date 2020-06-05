@@ -1,72 +1,3 @@
-/* // Put this at the top of your script when testing in a web browser
-class Choice {
-  constructor(value, index, label, selected, image) {
-
-    this.CHOICE_INDEX = index
-    this.CHOICE_VALUE = value
-    this.CHOICE_LABEL = label
-    if (selected) {
-      selected = true
-    } else {
-      selected = false
-    }
-    this.CHOICE_IMAGE = image
-  }
-}
-
-var fieldProperties = {
-  CHOICES: [
-    new Choice('1', 0, 'Yes'),
-    new Choice('0', 0, 'No'),
-    new Choice('-99', 0, 'Pass')
-  ],
-  METADATA: '',
-  LABEL: 'This is a label',
-  HINT: 'This is a hint',
-  PARAMETERS: [
-    {
-      key: 'duration',
-      value: 50
-    }
-  ],
-  FIELDTYPE: 'select_multiple',
-  APPEARANCE: 'list-nolabel',
-  LANGUAGE: 'english'
-}
-
-function setAnswer(ans) {
-  console.log('Set answer to: ' + ans)
-}
-
-function setMetaData(string) {
-  fieldProperties.METADATA = string
-}
-
-function getMetaData() {
-  return fieldProperties.METADATA
-}
-
-function getPluginParameter(param) {
-  const parameters = fieldProperties.PARAMETERS
-  if (parameters != null) {
-    for (const p of fieldProperties.PARAMETERS) {
-      const key = p.key
-      if (key == param) {
-        return p.value
-      } // End IF
-    } // End FOR
-  } // End IF
-}
-
-function goToNextField() {
-  console.log('Skipped to next field')
-}
-// document.body.classList.add('android-collect')
-// Above for testing only */
-
-
-
-
 /* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
 const choices = fieldProperties.CHOICES
@@ -288,21 +219,13 @@ function clearAnswer () {
 function removeContainer (keep) {
   if (keep !== 'radio') {
     radioButtonsContainer.parentElement.removeChild(radioButtonsContainer) // remove the default radio buttons
-  }
-
-  if (keep !== 'minimal') {
+  } else if (keep !== 'minimal') {
     selectDropDownContainer.parentElement.removeChild(selectDropDownContainer) // remove the select dropdown contrainer
-  }
-
-  if (keep !== 'likert') {
+  } else if (keep !== 'likert') {
     likertContainer.parentElement.removeChild(likertContainer) // remove the likert container
-  }
-
-  if (keep !== 'label') {
+  } else if (keep !== 'label') {
     choiceLabelContainer.parentElement.removeChild(choiceLabelContainer)
-  }
-
-  if (keep !== 'nolabel') {
+  } else if (keep !== 'nolabel') {
     listNoLabelContainer.parentElement.removeChild(listNoLabelContainer)
   }
 }
@@ -392,10 +315,6 @@ function establishTimeLeft () { // This checks the current answer and leftover t
     blockInput()
   } else {
     if ((leftoverTime == null) || (leftoverTime === '') || isNaN(leftoverTime)) {
-      checkComplete(currentAnswer)
-      startTime = Date.now()
-      timeLeft = timeStart
-    } else if (isNaN(leftoverTime)) {
       checkComplete(currentAnswer)
       startTime = Date.now()
       timeLeft = timeStart
