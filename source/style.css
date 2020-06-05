@@ -254,7 +254,6 @@ div.choice-labels table, div.list-nolabel table {
 .choice-labels, .list-nolabel {
     border: 1px solid #ddd;
     padding: 10px 15px;
-    margin-bottom: -1px;
     text-align: left;
 }
 
