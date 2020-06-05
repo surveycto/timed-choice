@@ -114,14 +114,10 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   removeContainer('nolabel')
   labelContainer.parentElement.removeChild(labelContainer)
   hintContainer.parentElement.removeChild(hintContainer)
-  const passTd = document.querySelector('#choice-' + missed)
-  passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 } else if (appearance.includes('label')) {
   removeContainer('label')
   labelContainer.parentElement.removeChild(labelContainer)
   hintContainer.parentElement.removeChild(hintContainer)
-  const passTd = document.querySelector('#choice-' + missed)
-  passTd.parentElement.removeChild(passTd) // Remove the pass label as a header
 } else { // all other appearances
   if (fieldProperties.LANGUAGE !== null && isRTL(fieldProperties.LANGUAGE)) {
     radioButtonsContainer.dir = 'rtl'
@@ -135,6 +131,12 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
     }
   }
 }
+
+// Removed the "missed" value as a visible choice
+const passTd = document.querySelector('#choice-' + missed)
+console.log('Removing:')
+console.log(passTd)
+passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 
 // Changes checkboxes to radio buttons if select_one
 const allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
