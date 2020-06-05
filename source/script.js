@@ -408,7 +408,7 @@ function establishTimeLeft () { // This checks the current answer and leftover t
 } // End establishTimeLeft
 
 function checkComplete (cur) {
-  if ((cur === '') || (cur == null) || (cur.length !== 0)) {
+  if ((cur === '') || (cur == null) || (cur.length === 0)) {
     complete = false
   } else {
     complete = true
@@ -416,16 +416,6 @@ function checkComplete (cur) {
     if (autoAdvance) {
       goToNextField()
     }
-  }
-
-  if (cur.length !== 0) {
-    complete = true
-    blockInput()
-    if (autoAdvance) {
-      goToNextField()
-    }
-  } else {
-    complete = false
   }
 }
 
