@@ -1,3 +1,72 @@
+/* // Put this at the top of your script when testing in a web browser
+class Choice {
+  constructor(value, index, label, selected, image) {
+
+    this.CHOICE_INDEX = index
+    this.CHOICE_VALUE = value
+    this.CHOICE_LABEL = label
+    if (selected) {
+      selected = true
+    } else {
+      selected = false
+    }
+    this.CHOICE_IMAGE = image
+  }
+}
+
+var fieldProperties = {
+  CHOICES: [
+    new Choice('1', 0, 'Yes'),
+    new Choice('0', 0, 'No'),
+    new Choice('-99', 0, 'Pass')
+  ],
+  METADATA: '',
+  LABEL: 'This is a label',
+  HINT: 'This is a hint',
+  PARAMETERS: [
+    {
+      key: 'duration',
+      value: 50
+    }
+  ],
+  FIELDTYPE: 'select_multiple',
+  APPEARANCE: 'list-nolabel',
+  LANGUAGE: 'english'
+}
+
+function setAnswer(ans) {
+  console.log('Set answer to: ' + ans)
+}
+
+function setMetaData(string) {
+  fieldProperties.METADATA = string
+}
+
+function getMetaData() {
+  return fieldProperties.METADATA
+}
+
+function getPluginParameter(param) {
+  const parameters = fieldProperties.PARAMETERS
+  if (parameters != null) {
+    for (const p of fieldProperties.PARAMETERS) {
+      const key = p.key
+      if (key == param) {
+        return p.value
+      } // End IF
+    } // End FOR
+  } // End IF
+}
+
+function goToNextField() {
+  console.log('Skipped to next field')
+}
+// document.body.classList.add('android-collect')
+// Above for testing only */
+
+
+
+
 /* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
 const choices = fieldProperties.CHOICES
@@ -37,8 +106,6 @@ var timeLeft // Starts this way for the display.
 var timePassed = 0 // Time passed so far
 var complete = false
 var currentAnswer
-
-var allBoxes = document.querySelectorAll('input')
 
 var allChoices = []
 
@@ -93,20 +160,6 @@ if (allChoices.indexOf(String(missed)) === -1) {
   throw new Error(errorMessage)
 }
 
-// ADJUST APPEARANCES
-
-if (fieldType === 'select_multiple') { // Changes input type
-  for (let c = 0; c < numChoices; c++) {
-    const choice = choices[c]
-    const box = allBoxes[c]
-    box.type = 'checkbox'
-    if (choice.CHOICE_SELECTED) {
-      box.checked = true // Selects choices that have already been selected
-    }
-  }
-}
-gatherAnswer()
-
 // Prepare the current webview, making adjustments for any appearance options
 if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) { // minimal appearance
   removeContainer('minimal')
@@ -148,6 +201,17 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
     }
   }
 }
+
+// ADJUST APPEARANCES
+
+const allBoxes = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed.
+if (fieldType === 'select_one') { // Changes input type
+  for (const c of allBoxes) {
+    const box = c
+    box.type = 'radio'
+  }
+}
+
 
 // minimal appearance
 if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
@@ -342,6 +406,16 @@ function establishTimeLeft () { // This checks the current answer and leftover t
 } // End establishTimeLeft
 
 function checkComplete (cur) {
+  if ((cur === '') || (cur == null) || (cur.length !== 0)) {
+    complete = false
+  } else {
+    complete = true
+    blockInput()
+    if (autoAdvance) {
+      goToNextField()
+    }
+  }
+
   if (cur.length !== 0) {
     complete = true
     blockInput()
