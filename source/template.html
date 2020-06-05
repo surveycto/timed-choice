@@ -36,7 +36,7 @@
 <!-- This is the input area that will be shown by default -->
 <form class="choices-container" id="radio-buttons-container" dir="auto">
   {{#CHOICES}}
-  <div class="choice-container {{#CHOICE_SELECTED}}selected{{/CHOICE_SELECTED}}">
+  <div class="choice-container {{#CHOICE_SELECTED}}selected{{/CHOICE_SELECTED}}" id="choice-{{CHOICE_VALUE}}">
     <input
            type="checkbox"
            value="{{CHOICE_VALUE}}"
@@ -62,7 +62,8 @@
   <option value="">Select one answer</option>
   {{#CHOICES}}
   <option
-          value="{{CHOICE_VALUE}}"
+          id="choice-{{CHOICE_VALUE}}
+          value=" {{CHOICE_VALUE}}"
           {{#CHOICE_SELECTED}}selected{{/CHOICE_SELECTED}}>
     {{CHOICE_LABEL}}
   </option>
@@ -72,7 +73,7 @@
 <!-- This is what will be shown if the field has the 'likert' appearance -->
 <div class="likert-choices-container" id="likert-container">
   {{#CHOICES}}
-  <div class="likert-choice-container">
+  <div class="likert-choice-container"  id="choice-{{CHOICE_VALUE}}">
     <div class="likert-input-button-container">
       <div
            data-value="{{CHOICE_VALUE}}"
