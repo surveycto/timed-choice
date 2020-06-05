@@ -243,13 +243,13 @@
 }
 
 /* label and list-nolabel appearances */
-div.label table, div.list-nolabel table {
+div.choice-labels table, div.list-nolabel table {
     width: 100%
 }
 
-.label, .list-nolabel {
+/*.choice-labels, .list-nolabel {
     margin: 0
-}
+}*/
 
 .choice-labels, .list-nolabel {
     border: 1px solid #ddd;
@@ -263,7 +263,8 @@ div.label table, div.list-nolabel table {
 }
 
 .header, .fl-radio {
-    width: 30px;
+    width: 60px;
+    text-align: center;
 }
 
 
@@ -272,8 +273,6 @@ div.label table, div.list-nolabel table {
 }
 
 .fl-radio {
-    text-align: center;
-    width: 30px;
 }
 
 /* label appearance */
@@ -285,13 +284,11 @@ div.label table, div.list-nolabel table {
 }
 
 .header {
-    text-align: left;
 }
 
 
 /* list-nolabel appearance */
 .list-nolabel {
-    text-align: center;
 }
 
 .list-nolabel td{ 
