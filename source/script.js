@@ -89,8 +89,7 @@ const choiceContainers = document.querySelectorAll('.choice-container') // Go th
 const timerDisp = timerContainer.querySelector('#timerdisp')
 const unitDisp = timerContainer.querySelector('#unitdisp')
 
-// PARAMETERS and their defaults
-
+// PARAMETERS
 var dispTimer = getPluginParameter('disp')
 var timeStart = getPluginParameter('duration')
 var unit = getPluginParameter('unit')
@@ -100,13 +99,13 @@ var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var leftoverTime = parseInt(getMetaData())
 
+// Time and other vars
 var startTime // This will get an actual value when the timer starts in startStopTimer()
 var round = 1000 // Default, may be changed
 var timeLeft // Starts this way for the display.
 var timePassed = 0 // Time passed so far
 var complete = false
 var currentAnswer
-
 var allChoices = []
 
 // Setup defaults of parameters if they are not defined
@@ -129,7 +128,9 @@ if (unit == null) {
 unitDisp.innerHTML = unit
 
 if (missed == null) {
-  missed = -99
+  missed = '-99'
+} else {
+  missed = String(missed)
 }
 
 if (resume == 0) {
@@ -154,11 +155,13 @@ if (block == 0) {
 for (const c of choices) {
   allChoices.push(c.CHOICE_VALUE)
 }
-if (allChoices.indexOf(String(missed)) === -1) {
-  const errorMessage = String(missed) + ' is not specified as a choice value. Please add a choice with ' + String(missed) + ' as a choice value, or this field plug-in will not work.'
+if (allChoices.indexOf(missed) === -1) {
+  const errorMessage = missed + ' is not specified as a choice value. Please add a choice with ' + missed + ' as a choice value, or this field plug-in will not work.'
   document.querySelector('#error').innerHTML = 'Error: ' + errorMessage
   throw new Error(errorMessage)
 }
+
+// ADJUST APPEARANCES
 
 // Prepare the current webview, making adjustments for any appearance options
 if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) { // minimal appearance
@@ -180,14 +183,14 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   removeContainer('nolabel')
   labelContainer.parentElement.removeChild(labelContainer)
   hintContainer.parentElement.removeChild(hintContainer)
-  const passTd = document.querySelector('#choice-' + String(missed))
+  const passTd = document.querySelector('#choice-' + missed)
   passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 } else if (appearance.includes('label')) {
   removeContainer('label')
   labelContainer.parentElement.removeChild(labelContainer)
   hintContainer.parentElement.removeChild(hintContainer)
-  const passTd = document.querySelector('#choice-' + String(missed))
-  passTd.parentElement.removeChild(passTd) // Remove the pass value as a choice
+  const passTd = document.querySelector('#choice-' + missed)
+  passTd.parentElement.removeChild(passTd) // Remove the pass label as a header
 } else { // all other appearances
   if (fieldProperties.LANGUAGE !== null && isRTL(fieldProperties.LANGUAGE)) {
     radioButtonsContainer.dir = 'rtl'
@@ -202,23 +205,23 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   }
 }
 
-// ADJUST APPEARANCES
-
-const allBoxes = document.querySelectorAll('input') // This is declared here so the unneeded boxes have already been removed.
+// Changes checkboxes to radio buttons if select_one
+const allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
+const numButtons = allButtons.length
 if (fieldType === 'select_one') { // Changes input type
-  for (const c of allBoxes) {
+  for (const c of allButtons) {
     const box = c
     box.type = 'radio'
   }
 }
-
 
 // minimal appearance
 if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   selectDropDownContainer.onchange = change // when the select dropdown is changed, call the change() function (which will update the current value)
 } else if ((appearance.includes('likert') === true) && (fieldType === 'select_one')) { // likert appearance
   var likertButtons = document.querySelectorAll('div[name="opt"]')
-  for (var i = 0; i < likertButtons.length; i++) {
+  var numLikert = likertButtons.length
+  for (var i = 0; i < numLikert; i++) {
     likertButtons[i].onclick = function () {
       // clear previously selected option (if any)
       var selectedOption = document.querySelector('.likert-input-button.selected')
@@ -230,9 +233,8 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
     }
   }
 } else { // all other appearances
-  var buttons = document.querySelectorAll('input[name="opt"]')
-  for (var i = 0; i < buttons.length; i++) {
-    buttons[i].onchange = function () {
+  for (var i = 0; i < numButtons; i++) {
+    allButtons[i].onchange = function () {
       // remove 'selected' class from a previously selected option (if any)
       var selectedOption = document.querySelector('.choice-container.selected')
       if ((selectedOption) && (fieldType === 'select_one')) {
@@ -322,7 +324,7 @@ function change () {
 function gatherAnswer () {
   const selected = []
   for (let c = 0; c < numChoices; c++) {
-    if (allBoxes[c].checked === true) {
+    if (allButtons[c].checked === true) {
       selected.push(choices[c].CHOICE_VALUE)
     }
   }
@@ -430,7 +432,7 @@ function checkComplete (cur) {
 // Makes radio/check buttons unusable if that setting is turned on
 function blockInput () {
   if (block) {
-    for (const b of allBoxes) {
+    for (const b of allButtons) {
       b.disabled = true
     }
   }
