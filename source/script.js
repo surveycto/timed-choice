@@ -3,7 +3,7 @@
 const choices = fieldProperties.CHOICES
 const appearance = fieldProperties.APPEARANCE
 const fieldType = fieldProperties.FIELDTYPE
-const numChoices = choices.length
+const numChoices = choices.length - 1 // Subtract 1, because the last choice is the 'pass' value
 
 const timerContainer = document.querySelector('#timer-container')
 const labelContainer = document.querySelector('#label')
@@ -134,8 +134,6 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
 
 // Removed the "missed" value as a visible choice
 const passTd = document.querySelector('#choice-' + missed)
-console.log('Removing:')
-console.log(passTd)
 passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 
 // Changes checkboxes to radio buttons if select_one
