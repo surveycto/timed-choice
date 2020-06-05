@@ -219,13 +219,21 @@ function clearAnswer () {
 function removeContainer (keep) {
   if (keep !== 'radio') {
     radioButtonsContainer.parentElement.removeChild(radioButtonsContainer) // remove the default radio buttons
-  } else if (keep !== 'minimal') {
+  }
+
+  if (keep !== 'minimal') {
     selectDropDownContainer.parentElement.removeChild(selectDropDownContainer) // remove the select dropdown contrainer
-  } else if (keep !== 'likert') {
+  }
+
+  if (keep !== 'likert') {
     likertContainer.parentElement.removeChild(likertContainer) // remove the likert container
-  } else if (keep !== 'label') {
+  }
+
+  if (keep !== 'label') {
     choiceLabelContainer.parentElement.removeChild(choiceLabelContainer)
-  } else if (keep !== 'nolabel') {
+  }
+
+  if (keep !== 'nolabel') {
     listNoLabelContainer.parentElement.removeChild(listNoLabelContainer)
   }
 }
