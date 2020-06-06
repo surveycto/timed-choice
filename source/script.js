@@ -64,12 +64,6 @@ if (missed == null) {
   missed = String(missed)
 }
 
-if (resume == 0) {
-  resume = false
-} else {
-  resume = true
-}
-
 if ((autoAdvance == 0) || ((!dispTimer) && (autoAdvance != 1))) {
   autoAdvance = false
 } else {
@@ -80,6 +74,27 @@ if (block == 0) {
   block = false
 } else {
   block = true
+}
+
+if (resume == 1) {
+  resume = true
+} else {
+  resume = false
+  for (const c of choices) { // Checks each choice to see if the form has already been completed
+    if (c.CHOICE_SELECTED) { // If a choice has a value, then that means the field is already complete
+      complete = true
+      console.log('Choice is selected:')
+      console.log(c)
+      if (autoAdvance) {
+        goToNextField()
+      }
+      break // No need to check anymore if even one choice has been selected
+    } // End going through each choice
+  }
+
+  if (!complete) {
+    setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
+  }
 }
 
 // Check to make sure "pass" value is a choice value
@@ -136,8 +151,16 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
 const passTd = document.querySelector('#choice-' + missed)
 passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 
-// Changes checkboxes to radio buttons if select_one
+// Retrieves the button info now that all of the unneeded ones have been removed
+
 const allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
+
+// If it set to not resume, and the field has already been accessed before, then this activate blockInput. Doing it now instead of before, since not all of the buttons were available yet.
+if (complete) {
+  blockInput()
+}
+
+// Changes checkboxes to radio buttons if select_one
 const numButtons = allButtons.length
 if (fieldType === 'select_one') { // Changes input type
   for (const c of allButtons) {
@@ -317,24 +340,16 @@ function timer () {
 }
 
 function establishTimeLeft () { // This checks the current answer and leftover time, and either auto-advances if there is no time left, or establishes how much time is left.
-  if ((currentAnswer !== '') && (!resume)) {
-    complete = true
-    timeLeft = 0
-    blockInput()
+  if ((leftoverTime == null) || (leftoverTime === '') || isNaN(leftoverTime)) {
+    startTime = Date.now()
+    timeLeft = timeStart
   } else {
-    if ((leftoverTime == null) || (leftoverTime === '') || isNaN(leftoverTime)) {
-      checkComplete(currentAnswer)
-      startTime = Date.now()
-      timeLeft = timeStart
-    } else {
-      complete = false
-      timeLeft = parseInt(leftoverTime)
-      startTime = Date.now() - (timeStart - timeLeft)
-    }
-  } // End ELSE
+    timeLeft = parseInt(leftoverTime)
+    startTime = Date.now() - (timeStart - timeLeft)
+  }
 } // End establishTimeLeft
 
-function checkComplete (cur) {
+/* function checkComplete (cur) {
   if ((cur === '') || (cur == null) || (cur.length === 0)) {
     complete = false
   } else {
@@ -344,7 +359,7 @@ function checkComplete (cur) {
       goToNextField()
     }
   }
-}
+} */
 
 // Makes radio/check buttons unusable if that setting is turned on
 function blockInput () {
