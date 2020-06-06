@@ -366,8 +366,12 @@ function establishTimeLeft () { // This checks the current answer and leftover t
 // Makes radio/check buttons unusable if that setting is turned on
 function blockInput () {
   if (block) {
-    for (const b of allButtons) {
-      b.disabled = true
+    if (appearance.includes('minimal')) {
+      selectDropDownContainer.disabled = true // Disabled 'minimal' container
+    } else {
+      for (const b of allButtons) {
+        b.disabled = true
+      }
     }
   }
 }
