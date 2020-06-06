@@ -58,7 +58,7 @@
 </form>
 
 <!-- This is what will be shown if the field has the 'minimal' appearance -->
-<select class="choices-container default-answer-text-size" id="select-dropdown-container">
+<select class="choices-container default-answer-text-size" id="select-dropdown-container" dir="auto">
   <option value="">Select one answer</option>
   {{#CHOICES}}
   <option
@@ -98,7 +98,7 @@
 <div class="choice-labels" id="choice-labels">
   <table>
     <tr>
-      <td class="fl-label">{{{LABEL}}}</td>
+      <td class="fl-label" dir="auto">{{{LABEL}}}</td>
       {{#CHOICES}}
       <td class="header" id="choice-{{CHOICE_VALUE}}">
         {{CHOICE_LABEL}}
@@ -112,7 +112,7 @@
 <div class="list-nolabel" id="list-nolabel">
   <table>
     <tr>
-      <td class="fl-label">{{{LABEL}}}</td>
+      <td class="fl-label" dir="auto">{{{LABEL}}}</td>
       {{#CHOICES}}
       <td class="fl-radio" id="choice-{{CHOICE_VALUE}}">
         <input
