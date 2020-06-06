@@ -147,7 +147,7 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   }
 }
 
-// Removed the "missed" value as a visible choice
+// Removes the "missed" value as a visible choice
 const passTd = document.querySelector('#choice-' + missed)
 passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 
@@ -177,15 +177,17 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   var numLikert = likertButtons.length
   for (var i = 0; i < numLikert; i++) {
     likertButtons[i].onclick = function () {
-      // clear previously selected option (if any)
-      var selectedOption = document.querySelector('.likert-input-button.selected')
-      if (selectedOption) {
-        selectedOption.classList.remove('selected')
-      }
-      this.classList.add('selected') // mark clicked option as selected
-      change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
-    }
-  }
+      if (!(complete && block)) { // This way, cannot be changed if the field is complete, and a block is setup
+        // clear previously selected option (if any)
+        var selectedOption = document.querySelector('.likert-input-button.selected')
+        if (selectedOption) {
+          selectedOption.classList.remove('selected')
+        }
+        this.classList.add('selected') // mark clicked option as selected
+        change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
+      } // End field is not complete
+    } // End function for what happens when button is clicked
+  } // End loop through each likert choice
 } else { // all other appearances
   for (var i = 0; i < numButtons; i++) {
     allButtons[i].onchange = function () {
