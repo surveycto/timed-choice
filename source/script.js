@@ -83,8 +83,6 @@ if (resume == 1) {
   for (const c of choices) { // Checks each choice to see if the form has already been completed
     if (c.CHOICE_SELECTED) { // If a choice has a value, then that means the field is already complete
       complete = true
-      console.log('Choice is selected:')
-      console.log(c)
       if (autoAdvance) {
         goToNextField()
       }
@@ -237,7 +235,10 @@ function clearAnswer () {
       selectedOption.parentElement.classList.remove('selected')
     }
   }
-  setAnswer('')
+
+  setAnswer()
+  leftoverTime = null
+  establishTimeLeft() // Reset the time since staring over. Maybe a parameter in a later version
 }
 
 // Removed the containers that are not to be used
