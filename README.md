@@ -1,4 +1,4 @@
-# Timed field list - choice lists
+# Timed choice
 
 ![Quick appearance](extras/preview-images/quick.png)  
 *select_one* with "quick" *appearance*
@@ -15,7 +15,7 @@ Use this field when you would like to time multiple *select_one* and/or *select_
 
 If a user attempts to return to a field with this field plug-in that has already been completed, the field will auto-advance (unless parameter 4 is equal to `1` and there was time left, see **Parameters** below).
 
-[![Download now](extras/download-button.png)](https://github.com/surveycto/timed-advance/raw/master/timedadvance.fieldplugin.zip)
+[![Download now](extras/download-button.png)](https://github.com/surveycto/timed-advance/raw/master/timed-choice.fieldplugin.zip)
 
 ## Default SurveyCTO feature support
 
@@ -43,7 +43,7 @@ If a user attempts to return to a field with this field plug-in that has already
 
 ## How to use
 
-**To use this field plug-in as-is**, just download the [timedadvance.fieldplugin.zip](timedadvance.fieldplugin.zip) file from this repo, and attach it to your form.
+**To use this field plug-in as-is**, just download the [timed-choice.fieldplugin.zip](timed-choice.fieldplugin.zip) file from this repo, and attach it to your form.
 
 To create your own field plug-in using this as a template, follow these steps:
 
@@ -67,7 +67,7 @@ There are several parameters, but all of them are optional. The most important p
 |`unit`|Only needed for the first field in the field list. Unit to be displayed for the time remaining. The time will be shown as the correct converted version. For example, if the start time is 15 seconds, and the unit is `'ms'` for milliseconds, the time will be displayed at the start as `15000`.|`'s'`|
 |`disp`|Whether the timer should be displayed or not. Most of the time, this parameter should not be included, since the timer should almost always be displayed. Howerver, if it should not displayed for some reason, such as if it is within a field list, and it is not the top field in a field list, then this parameter should have a value of `0`.|`1`|
 |`pass`|The value the field will be given if time runs out before an answer is given. Make sure you add a choice to your choice list with this as a value.|`-99`|
-|`advance`|Whether the field should auto-advance after time runs out. By default (such as if the parameter is not specified), when time runs out, the field will automatically advance, and the enumerator/respondent will not be able to return. If this parameter is equal to `0`, then the field will not auto-advance when time runs out.|`1`|
+|`advance`|Whether the field should auto-advance after time runs out. By default (such as if the parameter is not specified), when time runs out, the form will automatically advance to the next field, and the enumerator/respondent will not be able to return. If this parameter is equal to `0`, then the field will not auto-advance when time runs out.|`1`|
 |`block`|Whether the respondent can change the selection after time runs out. By default, input will be blocked after time runs out. If this parameter is equal to `0`, then an enumerator/respondent can change the selection after time runs out.|`1`|
 |`resume`|Whether a respondent can return to a field and continue with the time they have left. For example, if there was 5 seconds remaining when they swiped forward, they can return to that field and work with that remaining 5 seconds. To allow this, give this parameter a value of `1`.|`0`|
 
@@ -90,19 +90,21 @@ The `advance` parameter has an exception:  If the `disp` parameter has a value o
 
 If you would like the field to move forward after 20 seconds, you can use this *appearance*:
 
-    custom-timedadvance(duration=20)
+    custom-timed-choice(duration=20)
 
 If you would like the time to be displayed in milliseconds, you can use this *appearance*:
 
-    custom-timedadvance(duration=20, unit='ms')
+    custom-timed-choice(duration=20, unit='ms')
 
 If the field is of type *select_one*, you would like it to have the `quick` appearance, and the field should last 15 seconds, you can use this *appearance*:
 
-    quick custom-timedadvance(duration=15)
+    quick custom-timed-choice(duration=15)
 
 If you would like the respondent to have 15 seconds to complete the field, but they can return to it later to change their answer with their remaining time, you can use this *appearance*:
 
-    quick custom-timedadvance(duration=15, unit='s', pass=-99, continue=1)
+    quick custom-timed-choice(duration=15, unit='s', pass=-99, resume=1)
+
+For more examples, check out the [sample form](extras/sample-form).
 
 ### Working with field lists
 
@@ -120,8 +122,8 @@ All fields should have the same `duration` value. To make sure of this, it may b
 
 ## More resources
 
-* **Test form**  
-You can find a form definition in this repo here: [extras/test-form](extras/test-form).
+* **Sample form**  
+You can find a form definition in this repo here: [extras/sample-form](extras/sample-form).
 
 * **Developer documentation**  
 More instructions for developing and using field plug-ins can be found here: [https://github.com/surveycto/Field-plug-in-resources](https://github.com/surveycto/Field-plug-in-resources)
