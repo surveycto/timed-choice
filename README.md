@@ -71,6 +71,8 @@ There are several parameters, but all of them are optional. The most important p
 |`block`|Whether the respondent can change the selection after time runs out. By default, input will be blocked after time runs out. If this parameter is equal to `0`, then an enumerator/respondent can change the selection after time runs out.|`1`|
 |`resume`|Whether a respondent can return to a field and continue with the time they have left. For example, if there was 5 seconds remaining when they swiped forward, they can return to that field and work with that remaining 5 seconds. To allow this, give this parameter a value of `1`.|`0`|
 
+### More details
+
 For the `unit` parameter, you can use the following display units:
 
 |**Abbr.**|**Full name**|**Unit in 1 second**|
@@ -80,7 +82,13 @@ For the `unit` parameter, you can use the following display units:
 |`cs`|centiseconds|100
 |`ms`|milliseconds|1000
 
-For example, if you would like the field to move forward after 20 seconds, you can use this *appearance*:
+Make sure they are in single quotes.
+
+The `advance` parameter has an exception:  If the `disp` parameter has a value of `0`, then the field will not auto-advance unless the `advance` parameter has a value of `1`. This is because timers are usually hidden in field lists, so that multiple versions of the same timer are not displayed. By also turning off the auto-advance, it ensures there are not multiple calls to move to the next field, which can cause the form to skip too far ahead.
+
+### Examples
+
+If you would like the field to move forward after 20 seconds, you can use this *appearance*:
 
     custom-timedadvance(duration=20)
 
