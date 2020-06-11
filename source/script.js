@@ -40,7 +40,7 @@ var currentAnswer
 var allChoices = []
 
 // Setup defaults of parameters if they are not defined
-if (dispTimer == 0) {
+if (dispTimer === 0) {
   dispTimer = false
   timerContainer.parentElement.removeChild(timerContainer)
 } else {
@@ -64,19 +64,19 @@ if (missed == null) {
   missed = String(missed)
 }
 
-if ((autoAdvance == 0) || ((!dispTimer) && (autoAdvance != 1))) {
+if ((autoAdvance === 0) || ((!dispTimer) && (autoAdvance !== 1))) {
   autoAdvance = false
 } else {
   autoAdvance = true
 }
 
-if (block == 0) {
+if (block === 0) {
   block = false
 } else {
   block = true
 }
 
-if (resume == 1) {
+if (resume === 1) {
   resume = true
 } else {
   resume = false
