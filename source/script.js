@@ -108,14 +108,14 @@ if (allChoices.indexOf(missed) === -1) {
 // ADJUST APPEARANCES
 
 // Prepare the current webview, making adjustments for any appearance options
-if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) { // minimal appearance
+if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) { // minimal appearance
   removeContainer('minimal')
   selectDropDownContainer.style.display = 'block' // show the select dropdown
-} else if ((appearance.includes('likert') === true) && (fieldType === 'select_one')) { // likert appearance
+} else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
   removeContainer('likert')
   likertContainer.style.display = 'flex' // show the likert container
   // likert-min appearance
-  if (appearance.includes('likert-min') === true) {
+  if (appearance.indexOf('likert-min') !== -1) {
     var likertChoices = document.getElementsByClassName('likert-choice-container')
     for (var i = 1; i < likertChoices.length - 1; i++) {
       likertChoices[i].querySelector('.likert-choice-label').style.display = 'none' // hide all choice labels except the first and last
@@ -123,11 +123,11 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
     likertChoices[0].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-first') // apply a special class to the first choice label
     likertChoices[likertChoices.length - 1].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-last') // apply a special class to the last choice label
   }
-} else if (appearance.includes('list-nolabel')) {
+} else if (appearance.indexOf('list-nolabel') !== -1) {
   removeContainer('nolabel')
   labelContainer.parentElement.removeChild(labelContainer)
   hintContainer.parentElement.removeChild(hintContainer)
-} else if (appearance.includes('label')) {
+} else if (appearance.indexOf('label') !== -1) {
   removeContainer('label')
   labelContainer.parentElement.removeChild(labelContainer)
   hintContainer.parentElement.removeChild(hintContainer)
@@ -137,7 +137,7 @@ if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
   }
   removeContainer('radio')
   // quick appearance
-  if ((appearance.includes('quick') === true) && (fieldType === 'select_one')) {
+  if ((appearance.indexOf('quick') !== -1) && (fieldType === 'select_one')) {
     for (var i = 0; i < choiceContainers.length; i++) {
       choiceContainers[i].classList.add('appearance-quick') // add the 'appearance-quick' class
       choiceContainers[i].getElementsByClassName('choice-label-text')[0].insertAdjacentHTML('beforeend', '<svg class="quick-appearance-icon"><use xlink:href="#quick-appearance-icon" /></svg>') // insert the 'quick' icon
@@ -168,9 +168,9 @@ if (fieldType === 'select_one') { // Changes input type
 }
 
 // minimal appearance
-if ((appearance.includes('minimal') === true) && (fieldType === 'select_one')) {
+if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
   selectDropDownContainer.onchange = change // when the select dropdown is changed, call the change() function (which will update the current value)
-} else if ((appearance.includes('likert') === true) && (fieldType === 'select_one')) { // likert appearance
+} else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
   var likertButtons = document.querySelectorAll('div[name="opt"]')
   var numLikert = likertButtons.length
   for (var i = 0; i < numLikert; i++) {
@@ -221,9 +221,9 @@ setInterval(timer, 1)
 // FUNCTIONS
 function clearAnswer () {
   // minimal appearance
-  if (appearance.includes('minimal') === true) {
+  if (appearance.indexOf('minimal') !== -1) {
     selectDropDownContainer.value = ''
-  } else if (appearance.includes('likert') === true) { // likert appearance
+  } else if (appearance.indexOf('likert') !== -1) { // likert appearance
     var selectedOption = document.querySelector('.likert-input-button.selected')
     if (selectedOption) {
       selectedOption.classList.remove('selected')
@@ -270,7 +270,7 @@ function change () {
     setAnswer(this.value)
     currentAnswer = this.value
     // If the appearance is 'quick', then also progress to the next field
-    if (appearance.includes('quick') === true) {
+    if (appearance.indexOf('quick') !== -1) {
       goToNextField()
     }
   } else {
@@ -280,7 +280,7 @@ function change () {
 
 function gatherAnswer () {
   const selected = []
-  for (let c = 0; c < numChoices; c++) {
+  for (var c = 0; c < numChoices; c++) {
     if (allButtons[c].checked === true) {
       selected.push(choices[c].CHOICE_VALUE)
     }
@@ -367,7 +367,7 @@ function establishTimeLeft () { // This checks the current answer and leftover t
 // Makes radio/check buttons unusable if that setting is turned on
 function blockInput () {
   if (block) {
-    if (appearance.includes('minimal')) {
+    if (appearance.indexOf('minimal') !== -1) {
       selectDropDownContainer.disabled = true // Disabled 'minimal' container
     } else {
       for (const b of allButtons) {
