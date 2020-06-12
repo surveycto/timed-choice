@@ -102,6 +102,17 @@ if (resume === 1) {
 
 // End default parameters
 
+// Check to make sure "pass" value is a choice value
+for (var c = 0; c < numChoices; c++) {
+  var choice = choices[c]
+  allChoices.push(choice.CHOICE_VALUE)
+}
+if (allChoices.indexOf(missed) === -1) {
+  var errorMessage = missed + ' is not specified as a choice value. Please add a choice with ' + missed + ' as a choice value, or this field plug-in will not work.'
+  document.querySelector('#error').innerHTML = 'Error: ' + errorMessage
+  throw new Error(errorMessage)
+}
+
 if (appearance.indexOf('label') === -1) {
   labelOrLnl = false
 } else {
