@@ -42,6 +42,66 @@ var complete = false
 var currentAnswer
 var allChoices = []
 
+// Default parameter values
+// Setup defaults of parameters if they are not defined
+if (dispTimer === 0) {
+  dispTimer = false
+  timerContainer.parentElement.removeChild(timerContainer)
+} else {
+  dispTimer = true
+}
+
+if ((timeStart == null) || isNaN(timeStart)) {
+  timeStart = 10000
+} else {
+  timeStart *= 1000
+}
+
+if (unit == null) {
+  unit = 's'
+}
+unitDisp.innerHTML = unit
+
+if (missed == null) {
+  missed = '-99'
+} else {
+  missed = String(missed)
+}
+
+if ((autoAdvance === 0) || ((!dispTimer) && (autoAdvance !== 1))) {
+  autoAdvance = false
+} else {
+  autoAdvance = true
+}
+
+if (block === 0) {
+  block = false
+} else {
+  block = true
+}
+
+if (resume === 1) {
+  resume = true
+} else {
+  resume = false
+  for (var c = 0; c < numChoices; c++) { // Checks each choice to see if the form has already been completed
+    var choice = choices[c]
+    if (choice.CHOICE_SELECTED) { // If a choice has a value, then that means the field is already complete
+      complete = true
+      if (autoAdvance) {
+        goToNextField()
+      }
+      break // No need to check anymore if even one choice has been selected
+    } // End going through each choice
+  }
+
+  if (!complete) {
+    setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
+  }
+}
+
+// End default parameters
+
 if (appearance.indexOf('label') === -1) {
   labelOrLnl = false
 } else {
