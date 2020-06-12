@@ -181,7 +181,18 @@ passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 
 var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
 
-// LEFT HERE
+// If it set to not resume, and the field has already been accessed before, then this activate blockInput. Doing it now instead of before, since not all of the buttons were available yet.
+if (complete) {
+  blockInput()
+}
+
+// Changes checkboxes to radio buttons if select_one
+var numButtons = allButtons.length
+if (fieldType === 'select_one') { // Changes input type
+  for (var b = 0; b < numButtons; b++) {
+    allButtons[b].type = 'radio'
+  }
+}
 
 // minimal appearance
 if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
