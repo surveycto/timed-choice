@@ -18,18 +18,10 @@ var listNoLabelContainer = document.querySelector('#list-nolabel')
 
 var labelOrLnl
 
-//Start timer fields
+// Start timer fields
+var timerContainer = document.querySelector('#timer-container')
 var timerDisp = timerContainer.querySelector('#timerdisp')
 var unitDisp = timerContainer.querySelector('#unitdisp')
-
-// Time and other vars
-var startTime // This will get an actual value when the timer starts in startStopTimer()
-var round = 1000 // Default, may be changed
-var timeLeft // Starts this way for the display.
-var timePassed = 0 // Time passed so far
-var complete = false
-var currentAnswer
-var allChoices = []
 
 // PARAMETERS
 var dispTimer = getPluginParameter('disp')
@@ -40,6 +32,15 @@ var resume = getPluginParameter('continue')
 var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var leftoverTime = parseInt(getMetaData())
+
+// Time and other vars
+var startTime // This will get an actual value when the timer starts in startStopTimer()
+var round = 1000 // Default, may be changed
+var timeLeft // Starts this way for the display.
+var timePassed = 0 // Time passed so far
+var complete = false
+var currentAnswer
+var allChoices = []
 
 if (appearance.indexOf('label') === -1) {
   labelOrLnl = false
