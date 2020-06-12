@@ -80,8 +80,9 @@ if (resume === 1) {
   resume = true
 } else {
   resume = false
-  for (const c of choices) { // Checks each choice to see if the form has already been completed
-    if (c.CHOICE_SELECTED) { // If a choice has a value, then that means the field is already complete
+  for (var c = 0; c < numChoices; c++) { // Checks each choice to see if the form has already been completed
+    var choice = choices[c]
+    if (choice.CHOICE_SELECTED) { // If a choice has a value, then that means the field is already complete
       complete = true
       if (autoAdvance) {
         goToNextField()
@@ -96,8 +97,9 @@ if (resume === 1) {
 }
 
 // Check to make sure "pass" value is a choice value
-for (const c of choices) {
-  allChoices.push(c.CHOICE_VALUE)
+for (var c = 0; c < numChoices; c++) {
+  var choice = choices[c]
+  allChoices.push(choice.CHOICE_VALUE)
 }
 if (allChoices.indexOf(missed) === -1) {
   const errorMessage = missed + ' is not specified as a choice value. Please add a choice with ' + missed + ' as a choice value, or this field plug-in will not work.'
@@ -161,9 +163,8 @@ if (complete) {
 // Changes checkboxes to radio buttons if select_one
 const numButtons = allButtons.length
 if (fieldType === 'select_one') { // Changes input type
-  for (const c of allButtons) {
-    const box = c
-    box.type = 'radio'
+  for (var b = 0; b < numButtons; b++) {
+    allButtons[b].type = 'radio'
   }
 }
 
@@ -370,9 +371,9 @@ function blockInput () {
     if (appearance.indexOf('minimal') !== -1) {
       selectDropDownContainer.disabled = true // Disabled 'minimal' container
     } else {
-      for (const b of allButtons) {
-        b.disabled = true
-      }
-    }
-  }
-}
+      for (var b = 0; b < numButtons; b++) {
+        allButtons[b].disabled = true
+      } // End FOR
+    } // End ELSE
+  } // End "block" is true
+} // End blockInput
