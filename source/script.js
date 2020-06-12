@@ -231,6 +231,23 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
   }
 }
 
+// Timing calculations
+if (unit === 'ms') {
+  unit = 'milliseconds'
+  round = 1
+} else if (unit === 'cs') {
+  unit = 'centiseconds'
+  round = 10
+} else if (unit === 'ds') {
+  unit = 'deciseconds'
+  round = 100
+} else {
+  unit = 'seconds'
+  round = 1000
+}
+
+establishTimeLeft()
+setInterval(timer, 1)
 
 // FUNCTIONS
 
