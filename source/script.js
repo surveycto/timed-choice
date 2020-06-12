@@ -1,24 +1,24 @@
 /* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
-const choices = fieldProperties.CHOICES
-const appearance = fieldProperties.APPEARANCE
-const fieldType = fieldProperties.FIELDTYPE
-const numChoices = choices.length - 1 // Subtract 1, because the last choice is the 'pass' value
+var choices = fieldProperties.CHOICES
+var appearance = fieldProperties.APPEARANCE
+var fieldType = fieldProperties.FIELDTYPE
+var numChoices = choices.length - 1 // Subtract 1, because the last choice is the 'pass' value
 
-const timerContainer = document.querySelector('#timer-container')
-const labelContainer = document.querySelector('#label')
-const hintContainer = document.querySelector('#hint')
+var timerContainer = document.querySelector('#timer-container')
+var labelContainer = document.querySelector('#label')
+var hintContainer = document.querySelector('#hint')
 
 // Appearance containers
-const radioButtonsContainer = document.getElementById('radio-buttons-container') // default radio buttons
-const selectDropDownContainer = document.getElementById('select-dropdown-container') // minimal appearance
-const likertContainer = document.querySelector('#likert-container') // likert
-const choiceLabelContainer = document.querySelector('#choice-labels')
-const listNoLabelContainer = document.querySelector('#list-nolabel')
+var radioButtonsContainer = document.getElementById('radio-buttons-container') // default radio buttons
+var selectDropDownContainer = document.getElementById('select-dropdown-container') // minimal appearance
+var likertContainer = document.querySelector('#likert-container') // likert
+var choiceLabelContainer = document.querySelector('#choice-labels')
+var listNoLabelContainer = document.querySelector('#list-nolabel')
 
-const choiceContainers = document.querySelectorAll('.choice-container') // Go through all the available choices
-const timerDisp = timerContainer.querySelector('#timerdisp')
-const unitDisp = timerContainer.querySelector('#unitdisp')
+var choiceContainers = document.querySelectorAll('.choice-container') // Go through all the available choices
+var timerDisp = timerContainer.querySelector('#timerdisp')
+var unitDisp = timerContainer.querySelector('#unitdisp')
 
 // PARAMETERS
 var dispTimer = getPluginParameter('disp')
@@ -102,7 +102,7 @@ for (var c = 0; c < numChoices; c++) {
   allChoices.push(choice.CHOICE_VALUE)
 }
 if (allChoices.indexOf(missed) === -1) {
-  const errorMessage = missed + ' is not specified as a choice value. Please add a choice with ' + missed + ' as a choice value, or this field plug-in will not work.'
+  var errorMessage = missed + ' is not specified as a choice value. Please add a choice with ' + missed + ' as a choice value, or this field plug-in will not work.'
   document.querySelector('#error').innerHTML = 'Error: ' + errorMessage
   throw new Error(errorMessage)
 }
@@ -148,12 +148,12 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) { //
 }
 
 // Removes the "missed" value as a visible choice
-const passTd = document.querySelector('#choice-' + missed)
+var passTd = document.querySelector('#choice-' + missed)
 passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 
 // Retrieves the button info now that all of the unneeded ones have been removed
 
-const allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
+var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
 
 // If it set to not resume, and the field has already been accessed before, then this activate blockInput. Doing it now instead of before, since not all of the buttons were available yet.
 if (complete) {
@@ -161,7 +161,7 @@ if (complete) {
 }
 
 // Changes checkboxes to radio buttons if select_one
-const numButtons = allButtons.length
+var numButtons = allButtons.length
 if (fieldType === 'select_one') { // Changes input type
   for (var b = 0; b < numButtons; b++) {
     allButtons[b].type = 'radio'
@@ -280,7 +280,7 @@ function change () {
 }
 
 function gatherAnswer () {
-  const selected = []
+  var selected = []
   for (var c = 0; c < numChoices; c++) {
     if (allButtons[c].checked === true) {
       selected.push(choices[c].CHOICE_VALUE)
