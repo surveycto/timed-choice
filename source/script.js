@@ -1,24 +1,35 @@
-/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
+/* global fieldProperties, setAnswer, goToNextField */
 
+// Start standard field setup
 var choices = fieldProperties.CHOICES
 var appearance = fieldProperties.APPEARANCE
 var fieldType = fieldProperties.FIELDTYPE
-var numChoices = choices.length - 1 // Subtract 1, because the last choice is the 'pass' value
+var numChoices = choices.length
 
-var timerContainer = document.querySelector('#timer-container')
 var labelContainer = document.querySelector('#label')
 var hintContainer = document.querySelector('#hint')
 
-// Appearance containers
-var radioButtonsContainer = document.getElementById('radio-buttons-container') // default radio buttons
-var selectDropDownContainer = document.getElementById('select-dropdown-container') // minimal appearance
+var choiceContainers // Will eventually contain all choice containers, either from no appearance, or 'list-nolabel' appearance
+var radioButtonsContainer = document.querySelector('#radio-buttons-container') // default radio buttons
+var selectDropDownContainer = document.querySelector('#select-dropdown-container') // minimal appearance
 var likertContainer = document.querySelector('#likert-container') // likert
 var choiceLabelContainer = document.querySelector('#choice-labels')
 var listNoLabelContainer = document.querySelector('#list-nolabel')
 
-var choiceContainers = document.querySelectorAll('.choice-container') // Go through all the available choices
+var labelOrLnl
+
+//Start timer fields
 var timerDisp = timerContainer.querySelector('#timerdisp')
 var unitDisp = timerContainer.querySelector('#unitdisp')
+
+// Time and other vars
+var startTime // This will get an actual value when the timer starts in startStopTimer()
+var round = 1000 // Default, may be changed
+var timeLeft // Starts this way for the display.
+var timePassed = 0 // Time passed so far
+var complete = false
+var currentAnswer
+var allChoices = []
 
 // PARAMETERS
 var dispTimer = getPluginParameter('disp')
@@ -30,141 +41,63 @@ var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var leftoverTime = parseInt(getMetaData())
 
-// Time and other vars
-var startTime // This will get an actual value when the timer starts in startStopTimer()
-var round = 1000 // Default, may be changed
-var timeLeft // Starts this way for the display.
-var timePassed = 0 // Time passed so far
-var complete = false
-var currentAnswer
-var allChoices = []
-
-// Setup defaults of parameters if they are not defined
-if (dispTimer === 0) {
-  dispTimer = false
-  timerContainer.parentElement.removeChild(timerContainer)
+if (appearance.indexOf('label') === -1) {
+  labelOrLnl = false
 } else {
-  dispTimer = true
+  labelOrLnl = true
 }
 
-if ((timeStart == null) || isNaN(timeStart)) {
-  timeStart = 10000
+if (labelOrLnl) {
+  choiceContainers = document.querySelectorAll('.fl-radio') // Go through all  the available choices if 'list-nolabel'
 } else {
-  timeStart *= 1000
+  choiceContainers = document.querySelectorAll('.choice-container') // go through all the available choices
 }
 
-if (unit == null) {
-  unit = 's'
-}
-unitDisp.innerHTML = unit
-
-if (missed == null) {
-  missed = '-99'
-} else {
-  missed = String(missed)
-}
-
-if ((autoAdvance === 0) || ((!dispTimer) && (autoAdvance !== 1))) {
-  autoAdvance = false
-} else {
-  autoAdvance = true
-}
-
-if (block === 0) {
-  block = false
-} else {
-  block = true
-}
-
-if (resume === 1) {
-  resume = true
-} else {
-  resume = false
-  for (var c = 0; c < numChoices; c++) { // Checks each choice to see if the form has already been completed
-    var choice = choices[c]
-    if (choice.CHOICE_SELECTED) { // If a choice has a value, then that means the field is already complete
-      complete = true
-      if (autoAdvance) {
-        goToNextField()
-      }
-      break // No need to check anymore if even one choice has been selected
-    } // End going through each choice
+if (!labelOrLnl) {
+  if (fieldProperties.LABEL) {
+    labelContainer.innerHTML = unEntity(fieldProperties.LABEL)
   }
-
-  if (!complete) {
-    setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
+  if (fieldProperties.HINT) {
+    hintContainer.innerHTML = unEntity(fieldProperties.HINT)
   }
 }
-
-// Check to make sure "pass" value is a choice value
-for (var c = 0; c < numChoices; c++) {
-  var choice = choices[c]
-  allChoices.push(choice.CHOICE_VALUE)
-}
-if (allChoices.indexOf(missed) === -1) {
-  var errorMessage = missed + ' is not specified as a choice value. Please add a choice with ' + missed + ' as a choice value, or this field plug-in will not work.'
-  document.querySelector('#error').innerHTML = 'Error: ' + errorMessage
-  throw new Error(errorMessage)
-}
-
-// ADJUST APPEARANCES
 
 // Prepare the current webview, making adjustments for any appearance options
 if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) { // minimal appearance
   removeContainer('minimal')
   selectDropDownContainer.style.display = 'block' // show the select dropdown
+} else if (appearance.indexOf('list-nolabel') !== -1) { // list-nolabel appearance
+  removeContainer('nolabel')
+  labelContainer.parentElement.removeChild(labelContainer)
+  hintContainer.parentElement.removeChild(hintContainer)
+} else if (labelOrLnl) { // If 'label' appearance
+  removeContainer('label')
+  labelContainer.parentElement.removeChild(labelContainer)
+  hintContainer.parentElement.removeChild(hintContainer)
 } else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
   removeContainer('likert')
   likertContainer.style.display = 'flex' // show the likert container
   // likert-min appearance
   if (appearance.indexOf('likert-min') !== -1) {
-    var likertChoices = document.getElementsByClassName('likert-choice-container')
+    var likertChoices = document.querySelectorAll('.likert-choice-container')
     for (var i = 1; i < likertChoices.length - 1; i++) {
       likertChoices[i].querySelector('.likert-choice-label').style.display = 'none' // hide all choice labels except the first and last
     }
     likertChoices[0].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-first') // apply a special class to the first choice label
     likertChoices[likertChoices.length - 1].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-last') // apply a special class to the last choice label
   }
-} else if (appearance.indexOf('list-nolabel') !== -1) {
-  removeContainer('nolabel')
-  labelContainer.parentElement.removeChild(labelContainer)
-  hintContainer.parentElement.removeChild(hintContainer)
-} else if (appearance.indexOf('label') !== -1) {
-  removeContainer('label')
-  labelContainer.parentElement.removeChild(labelContainer)
-  hintContainer.parentElement.removeChild(hintContainer)
 } else { // all other appearances
+  removeContainer('radio')
   if (fieldProperties.LANGUAGE !== null && isRTL(fieldProperties.LANGUAGE)) {
     radioButtonsContainer.dir = 'rtl'
   }
-  removeContainer('radio')
+
   // quick appearance
   if ((appearance.indexOf('quick') !== -1) && (fieldType === 'select_one')) {
     for (var i = 0; i < choiceContainers.length; i++) {
       choiceContainers[i].classList.add('appearance-quick') // add the 'appearance-quick' class
-      choiceContainers[i].getElementsByClassName('choice-label-text')[0].insertAdjacentHTML('beforeend', '<svg class="quick-appearance-icon"><use xlink:href="#quick-appearance-icon" /></svg>') // insert the 'quick' icon
+      choiceContainers[i].querySelectorAll('.choice-label-text')[0].insertAdjacentHTML('beforeend', '<svg class="quick-appearance-icon"><use xlink:href="#quick-appearance-icon" /></svg>') // insert the 'quick' icon
     }
-  }
-}
-
-// Removes the "missed" value as a visible choice
-var passTd = document.querySelector('#choice-' + missed)
-passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
-
-// Retrieves the button info now that all of the unneeded ones have been removed
-
-var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
-
-// If it set to not resume, and the field has already been accessed before, then this activate blockInput. Doing it now instead of before, since not all of the buttons were available yet.
-if (complete) {
-  blockInput()
-}
-
-// Changes checkboxes to radio buttons if select_one
-var numButtons = allButtons.length
-if (fieldType === 'select_one') { // Changes input type
-  for (var b = 0; b < numButtons; b++) {
-    allButtons[b].type = 'radio'
   }
 }
 
@@ -173,23 +106,27 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
   selectDropDownContainer.onchange = change // when the select dropdown is changed, call the change() function (which will update the current value)
 } else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
   var likertButtons = document.querySelectorAll('div[name="opt"]')
-  var numLikert = likertButtons.length
-  for (var i = 0; i < numLikert; i++) {
+  for (var i = 0; i < likertButtons.length; i++) {
     likertButtons[i].onclick = function () {
-      if (!(complete && block)) { // This way, cannot be changed if the field is complete, and a block is setup
-        // clear previously selected option (if any)
-        var selectedOption = document.querySelector('.likert-input-button.selected')
-        if (selectedOption) {
-          selectedOption.classList.remove('selected')
-        }
-        this.classList.add('selected') // mark clicked option as selected
-        change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
-      } // End field is not complete
-    } // End function for what happens when button is clicked
-  } // End loop through each likert choice
+      // clear previously selected option (if any)
+      var selectedOption = document.querySelector('.likert-input-button.selected')
+      if (selectedOption) {
+        selectedOption.classList.remove('selected')
+      }
+      this.classList.add('selected') // mark clicked option as selected
+      change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
+    }
+  }
 } else { // all other appearances
+  var buttons = document.querySelectorAll('input[name="opt"]')
+  var numButtons = buttons.length
+  if (fieldType === 'select_one') { // Change to radio buttons if select_one
+    for (var i = 0; i < numButtons; i++) {
+      buttons[i].type = 'radio'
+    }
+  }
   for (var i = 0; i < numButtons; i++) {
-    allButtons[i].onchange = function () {
+    buttons[i].onchange = function () {
       // remove 'selected' class from a previously selected option (if any)
       var selectedOption = document.querySelector('.choice-container.selected')
       if ((selectedOption) && (fieldType === 'select_one')) {
@@ -201,25 +138,6 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
   }
 }
 
-// Timing calculations
-if (unit === 'ms') {
-  unit = 'milliseconds'
-  round = 1
-} else if (unit === 'cs') {
-  unit = 'centiseconds'
-  round = 10
-} else if (unit === 'ds') {
-  unit = 'deciseconds'
-  round = 100
-} else {
-  unit = 'seconds'
-  round = 1000
-}
-
-establishTimeLeft()
-setInterval(timer, 1)
-
-// FUNCTIONS
 function clearAnswer () {
   // minimal appearance
   if (appearance.indexOf('minimal') !== -1) {
@@ -236,10 +154,6 @@ function clearAnswer () {
       selectedOption.parentElement.classList.remove('selected')
     }
   }
-
-  setAnswer()
-  leftoverTime = null
-  establishTimeLeft() // Reset the time since staring over. Maybe a parameter in a later version
 }
 
 // Removed the containers that are not to be used
@@ -269,40 +183,24 @@ function removeContainer (keep) {
 function change () {
   if (fieldType === 'select_one') {
     setAnswer(this.value)
-    currentAnswer = this.value
     // If the appearance is 'quick', then also progress to the next field
     if (appearance.indexOf('quick') !== -1) {
       goToNextField()
     }
   } else {
-    gatherAnswer()
-  }
-}
-
-function gatherAnswer () {
-  var selected = []
-  for (var c = 0; c < numChoices; c++) {
-    if (allButtons[c].checked === true) {
-      selected.push(choices[c].CHOICE_VALUE)
+    var selected = []
+    for (var c = 0; c < numChoices; c++) {
+      if (choiceContainers[c].querySelector('INPUT').checked === true) {
+        selected.push(choices[c].CHOICE_VALUE)
+      }
     }
+    setAnswer(selected.join(' '))
   }
-  currentAnswer = selected.join(' ')
-  setAnswer(currentAnswer)
 }
 
 // If the field label or hint contain any HTML that isn't in the form definition, then the < and > characters will have been replaced by their HTML character entities, and the HTML won't render. We need to turn those HTML entities back to actual < and > characters so that the HTML renders properly. This will allow you to render HTML from field references in your field label or hint.
 function unEntity (str) {
   return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-}
-if (fieldProperties.LABEL) {
-  try {
-    labelContainer.innerHTML = unEntity(fieldProperties.LABEL)
-  } catch { }
-}
-if (fieldProperties.HINT) {
-  try {
-    hintContainer.innerHTML = unEntity(fieldProperties.HINT)
-  } catch { }
 }
 
 // Detect right-to-left languages
@@ -313,67 +211,3 @@ function isRTL (s) {
 
   return rtlDirCheck.test(s)
 }
-
-// TIME FUNCTIONS
-
-function timer () {
-  if (!complete) {
-    timePassed = Date.now() - startTime
-    timeLeft = timeStart - timePassed
-  }
-
-  if (timeLeft < 0) { // Timer ended
-    blockInput()
-    complete = true
-    timeLeft = 0
-    // timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
-
-    if ((currentAnswer == null) || (currentAnswer === '') || (Array.isArray(currentAnswer) && (currentAnswer.length === 0))) {
-      setAnswer(missed)
-    }
-    setMetaData(0)
-    if (autoAdvance) {
-      goToNextField()
-    }
-  }
-  setMetaData(timeLeft)
-
-  if (dispTimer) {
-    timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
-  }
-}
-
-function establishTimeLeft () { // This checks the current answer and leftover time, and either auto-advances if there is no time left, or establishes how much time is left.
-  if ((leftoverTime == null) || (leftoverTime === '') || isNaN(leftoverTime)) {
-    startTime = Date.now()
-    timeLeft = timeStart
-  } else {
-    timeLeft = parseInt(leftoverTime)
-    startTime = Date.now() - (timeStart - timeLeft)
-  }
-} // End establishTimeLeft
-
-/* function checkComplete (cur) {
-  if ((cur === '') || (cur == null) || (cur.length === 0)) {
-    complete = false
-  } else {
-    complete = true
-    blockInput()
-    if (autoAdvance) {
-      goToNextField()
-    }
-  }
-} */
-
-// Makes radio/check buttons unusable if that setting is turned on
-function blockInput () {
-  if (block) {
-    if (appearance.indexOf('minimal') !== -1) {
-      selectDropDownContainer.disabled = true // Disabled 'minimal' container
-    } else {
-      for (var b = 0; b < numButtons; b++) {
-        allButtons[b].disabled = true
-      } // End FOR
-    } // End ELSE
-  } // End "block" is true
-} // End blockInput
