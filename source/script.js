@@ -173,6 +173,16 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) { //
   }
 }
 
+// Removes the "missed" value as a visible choice
+var passTd = document.querySelector('#choice-' + missed)
+passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
+
+// Retrieves the button info now that all of the unneeded ones have been removed
+
+var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
+
+// LEFT HERE
+
 // minimal appearance
 if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
   selectDropDownContainer.onchange = change // when the select dropdown is changed, call the change() function (which will update the current value)
@@ -209,6 +219,9 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
     }
   }
 }
+
+
+// FUNCTIONS
 
 function clearAnswer () {
   // minimal appearance
@@ -283,3 +296,55 @@ function isRTL (s) {
 
   return rtlDirCheck.test(s)
 }
+
+// TIME FUNCTIONS
+
+function timer () {
+  if (!complete) {
+    timePassed = Date.now() - startTime
+    timeLeft = timeStart - timePassed
+  }
+
+  if (timeLeft < 0) { // Timer ended
+    blockInput()
+    complete = true
+    timeLeft = 0
+    // timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
+
+    if ((currentAnswer == null) || (currentAnswer === '') || (Array.isArray(currentAnswer) && (currentAnswer.length === 0))) {
+      setAnswer(missed)
+    }
+    setMetaData(0)
+    if (autoAdvance) {
+      goToNextField()
+    }
+  }
+  setMetaData(timeLeft)
+
+  if (dispTimer) {
+    timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
+  }
+}
+
+function establishTimeLeft () { // This checks the current answer and leftover time, and either auto-advances if there is no time left, or establishes how much time is left.
+  if ((leftoverTime == null) || (leftoverTime === '') || isNaN(leftoverTime)) {
+    startTime = Date.now()
+    timeLeft = timeStart
+  } else {
+    timeLeft = parseInt(leftoverTime)
+    startTime = Date.now() - (timeStart - timeLeft)
+  }
+} // End establishTimeLeft
+
+// Makes radio/check buttons unusable if that setting is turned on
+function blockInput () {
+  if (block) {
+    if (appearance.indexOf('minimal') !== -1) {
+      selectDropDownContainer.disabled = true // Disabled 'minimal' container
+    } else {
+      for (var b = 0; b < numButtons; b++) {
+        allButtons[b].disabled = true
+      } // End FOR
+    } // End ELSE
+  } // End "block" is true
+} // End blockInput
