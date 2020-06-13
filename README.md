@@ -15,7 +15,7 @@ If a user attempts to return to a field with this field plug-in that has already
 
 **Important:** You need to include a choice with the value of `-99`. This choice will be hidden by the field plug-in, but it will be selected if the time runs out without a choice selected. You can change this with the `missed` parameter.
 
-[![Download now](extras/download-button.png)](https://github.com/surveycto/timed-advance/raw/master/timed-choice.fieldplugin.zip)
+[![Download now](extras/download-button.png)](https://github.com/surveycto/timed-choice/raw/master/timed-choice.fieldplugin.zip)
 
 ## Default SurveyCTO feature support
 
@@ -43,7 +43,7 @@ If a user attempts to return to a field with this field plug-in that has already
 
 ## How to use
 
-**To use this field plug-in as-is**, just download the [timed-choice.fieldplugin.zip](timed-choice.fieldplugin.zip) file from this repo, and attach it to your form.
+**To use this field plug-in as-is**, just download the [timed-choice.fieldplugin.zip](https://github.com/surveycto/timed-choice/raw/master/timed-choice.fieldplugin.zip) file from this repo, and attach it to your form.
 
 **To use this field plug-in as-is:**
 
