@@ -295,7 +295,8 @@ function removeContainer (keep) {
 // Save the user's response (update the current answer)
 function change () {
   if (fieldType === 'select_one') {
-    setAnswer(this.value)
+    currentAnswer = this.value
+    setAnswer(currentAnswer)
     // If the appearance is 'quick', then also progress to the next field
     if (appearance.indexOf('quick') !== -1) {
       goToNextField()
@@ -307,7 +308,8 @@ function change () {
         selected.push(choices[c].CHOICE_VALUE)
       }
     }
-    setAnswer(selected.join(' '))
+    currentAnswer = selected.join(' ')
+    setAnswer(currentAnswer)
   }
 }
 
