@@ -1,4 +1,4 @@
-/* global fieldProperties, setAnswer, goToNextField */
+/* global fieldProperties, setAnswer, goToNextField, getPluginParameter, getMetaData, setMetaData */
 
 // Start standard field setup
 var choices = fieldProperties.CHOICES
@@ -370,7 +370,7 @@ function establishTimeLeft () { // This checks the current answer and leftover t
 function blockInput () {
   if (block) {
     if (appearance.indexOf('minimal') !== -1) {
-      selectDropDownContainer.disabled = true // Disabled 'minimal' container
+      selectDropDownContainer.disabled = true // Disable 'minimal' container
     } else {
       for (var b = 0; b < numButtons; b++) {
         allButtons[b].disabled = true
@@ -380,6 +380,6 @@ function blockInput () {
 } // End blockInput
 
 // This is so that if the time runs out when there is an invalid selection, then set to the "missed" value
-function handleConstraintMessage(message) {
+function handleConstraintMessage (message) {
   setAnswer(missed)
 }
