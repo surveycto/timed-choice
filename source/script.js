@@ -378,3 +378,8 @@ function blockInput () {
     } // End ELSE
   } // End "block" is true
 } // End blockInput
+
+// This is so that if the time runs out when there is an invalid selection, then set to the "missed" value
+function handleConstraintMessage(message) {
+  setAnswer(missed)
+}
