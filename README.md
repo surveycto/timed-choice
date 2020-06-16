@@ -62,7 +62,7 @@ There are several parameters, but all of them are optional. The most important p
 |`pass`|The value the field will be given if time runs out before an answer is given. Make sure you add a choice to your choice list with this as a value.|`-99`|
 |`advance`|Whether the field should auto-advance after time runs out. By default (such as if the parameter is not specified), when time runs out, the form will automatically advance to the next field, and the enumerator/respondent will not be able to return. If this parameter is equal to `0`, then the field will not auto-advance when time runs out.|`1`|
 |`block`|Whether the respondent can change the selection after time runs out. By default, input will be blocked after time runs out. If this parameter is equal to `0`, then an enumerator/respondent can change the selection after time runs out.|`1`|
-|`resume`|Whether a respondent can return to a field and continue with the time they have left. For example, if there was 5 seconds remaining when they swiped forward, they can return to that field and work with that remaining 5 seconds. To allow this, give this parameter a value of `1`. Otherwise, if they swipe away, the answer they set will be saved, or if no answer was set, then the field value will be the `pass` value.|`0`|
+|`continue`|Whether a respondent can return to a field and continue with the time they have left. For example, if there was 5 seconds remaining when they swiped forward, they can return to that field and work with that remaining 5 seconds. To allow this, give this parameter a value of `1`. Otherwise, if they swipe away, the answer they set will be saved, or if no answer was set, then the field value will be the `pass` value.|`0`|
 
 ### More details
 
@@ -95,7 +95,7 @@ If the field is of type *select_one*, you would like it to have the `quick` appe
 
 If you would like the respondent to have 15 seconds to complete the field, but they can return to it later to change their answer with their remaining time, you can use this *appearance*:
 
-    quick custom-timed-choice(duration=15, unit='s', pass=-99, resume=1)
+    quick custom-timed-choice(duration=15, unit='s', pass=-99, continue=1)
 
 For more examples, check out the [sample form](extras/sample-form).
 
