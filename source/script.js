@@ -178,7 +178,6 @@ var passTd = document.querySelector('#choice-' + missed)
 passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 
 // Retrieves the button info now that all of the unneeded ones have been removed
-
 var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
 
 // If it set to not resume, and the field has already been accessed before, then this activate blockInput. Doing it now instead of before, since not all of the buttons were available yet.
@@ -201,13 +200,15 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
   var likertButtons = document.querySelectorAll('div[name="opt"]')
   for (var i = 0; i < likertButtons.length; i++) {
     likertButtons[i].onclick = function () {
-      // clear previously selected option (if any)
-      var selectedOption = document.querySelector('.likert-input-button.selected')
-      if (selectedOption) {
-        selectedOption.classList.remove('selected')
+      if ((timeLeft > 0) || !block) {
+        // clear previously selected option (if any)
+        var selectedOption = document.querySelector('.likert-input-button.selected')
+        if (selectedOption) {
+          selectedOption.classList.remove('selected')
+        }
+        this.classList.add('selected') // mark clicked option as selected
+        change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
       }
-      this.classList.add('selected') // mark clicked option as selected
-      change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
     }
   }
 } else { // all other appearances
