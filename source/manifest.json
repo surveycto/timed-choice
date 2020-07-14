@@ -1,0 +1,8 @@
+{
+	"name" : "Timed choice",
+	"author" : "Dobility",
+	"version": "2.1.3",
+	"supportedFieldTypes": ["select_one", "select_multiple"],
+	"hideDefaultRequiredMessage": false,
+	"hideDefaultConstraintMessage": false
+}
