@@ -63,8 +63,8 @@ if (metadata != null) {
     if (autoAdvance) {
       goToNextField()
     }
-  }
-}
+  } // End time has run out
+} // End metadata not blank
 
 // Default parameter values
 // Setup defaults of parameters if they are not defined
@@ -76,12 +76,12 @@ if (dispTimer === 0) {
 }
 
 if ((timeStart == null) || isNaN(timeStart)) {
-  timeStart = 10000
+  timeStart = 10000 // Default time 10,000 ms (10 seconds)
 } else {
   timeStart *= 1000
 }
 
-if (unit == null) {
+if (isNaN(unit)) {
   unit = 's'
 }
 unitDisp.innerHTML = unit
@@ -123,7 +123,7 @@ if (allChoices.indexOf(missed) === -1) {
   throw new Error(errorMessage)
 }
 
-if (appearance.indexOf('label') === -1) {
+if (appearance.indexOf('label') === -1) { // Check if it has the "label" or "list-nolabel" appearance
   labelOrLnl = false
 } else {
   labelOrLnl = true
@@ -190,11 +190,6 @@ passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 // Retrieves the button info now that all of the unneeded ones have been removed
 var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
 
-// If it set to not resume, and the field has already been accessed before, then this activate blockInput. Doing it now instead of before, since not all of the buttons were available yet.
-if (complete) {
-  blockInput()
-}
-
 // Changes checkboxes to radio buttons if select_one
 var numButtons = allButtons.length
 if (fieldType === 'select_one') { // Changes input type
@@ -226,15 +221,13 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
     }
   }
 } else { // all other appearances
-  var buttons = document.querySelectorAll('input[name="opt"]')
-  var numButtons = buttons.length
   if (fieldType === 'select_one') { // Change to radio buttons if select_one
     for (var i = 0; i < numButtons; i++) {
-      buttons[i].type = 'radio'
+      allButtons[i].type = 'radio'
     }
   }
   for (var i = 0; i < numButtons; i++) {
-    buttons[i].onchange = function () {
+    allButtons[i].onchange = function () {
       // remove 'selected' class from a previously selected option (if any)
       var selectedOption = document.querySelector('.choice-container.selected')
       if ((selectedOption) && (fieldType === 'select_one')) {
