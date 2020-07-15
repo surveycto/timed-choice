@@ -145,6 +145,8 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) { //
     likertChoices[0].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-first') // apply a special class to the first choice label
     likertChoices[likertChoices.length - 1].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-last') // apply a special class to the last choice label
   }
+  var likertButtons = document.querySelectorAll('div[name="opt"]')
+  var numLikert = likertButtons.length
 } else { // all other appearances
   removeContainer('radio')
   if (fieldProperties.LANGUAGE !== null && isRTL(fieldProperties.LANGUAGE)) {
@@ -168,20 +170,15 @@ passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
 var numButtons = allButtons.length
 
-console.log('Checking metadata:', metadata)
 if (metadata != null) { // Move on if there is already a value
   metadata = metadata.match(new RegExp('[^ ]+', 'g'))
-  console.log(metadata)
   leftoverTime = parseInt(metadata[0])
   var lastTimeStamp = parseInt(metadata[1])
-  console.log('Original leftover time:', leftoverTime)
   var timeSinceLast = Date.now() - lastTimeStamp
   leftoverTime = leftoverTime - timeSinceLast
-  console.log('New leftover time:', leftoverTime)
   if (leftoverTime <= 0) { // If time has run out, then block, auto-advance, and set to missed value if applicable
     leftoverTime = 0
     complete = true
-    console.log('About to block input')
     blockInput()
 
     if (!checkComplete()) { // If the field does not have a value, but time has run out, then set to "missed" value.
@@ -206,8 +203,7 @@ if (fieldType === 'select_one') { // Changes input type
 if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
   selectDropDownContainer.onchange = change // when the select dropdown is changed, call the change() function (which will update the current value)
 } else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
-  var likertButtons = document.querySelectorAll('div[name="opt"]')
-  for (var i = 0; i < likertButtons.length; i++) {
+  for (var i = 0; i < numLikert; i++) {
     likertButtons[i].onclick = function () {
       if (!complete) {
         // clear previously selected option (if any)
@@ -401,7 +397,9 @@ function blockInput () {
     if (appearance.indexOf('minimal') !== -1) {
       selectDropDownContainer.disabled = true // Disable 'minimal' container
     } else if (appearance.indexOf('likert') !== -1) {
-
+      for (var l = 0; l < numLikert; l++) {
+        likertButtons[l].classList.add('disabled')
+      }
     } else {
       for (var b = 0; b < numButtons; b++) {
         allButtons[b].disabled = true

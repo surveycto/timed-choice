@@ -189,6 +189,9 @@
     justify-content: center;
     align-items: center;
 }
+.likert-input-button.disabled { /* When the likert button has been disabled */
+    background-color: #ddd;
+}
 /* this is the blue dot that designates which choice is selected */
 .likert-input-button-mark > .likert-input-button-mark {
     display: none;
@@ -200,6 +203,9 @@
     background-color: #2EA3CF;
     margin: 0;
     display: inline;
+}
+.likert-input-button.selected.disabled >  .likert-input-button-mark {
+    background-color: #63727a;
 }
 /* this selects everything within the likert-choice-label class, i.e., text labels and image labels */
 .likert-choice-label * {
