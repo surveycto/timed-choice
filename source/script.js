@@ -100,29 +100,6 @@ if (allChoices.indexOf(missed) === -1) {
   throw new Error(errorMessage)
 }
 
-if (metadata != null) { // Move on if there is already a value
-  metadata = metadata.match(new RegExp('[^ ]+', 'g'))
-  leftoverTime = parseInt(metadata[0])
-  var lastTimeStamp = parseInt(metadata[1])
-  var timeSinceLast = Date.now() - lastTimeStamp
-  leftoverTime = leftoverTime - timeSinceLast
-  if (leftoverTime <= 0) { // If time has run out, then block, auto-advance, and set to missed value if applicable
-    leftoverTime = 0
-    complete = true
-    if (block) {
-      blockInput()
-    }
-
-    if (!checkComplete()) { // If the field does not have a value, but time has run out, then set to "missed" value.
-      setAnswer(missed)
-    }
-
-    if (autoAdvance) {
-      goToNextField()
-    }
-  } // End time has run out
-} // End metadata not blank
-
 if (appearance.indexOf('label') === -1) { // Check if it has the "label" or "list-nolabel" appearance
   labelOrLnl = false
 } else {
@@ -189,9 +166,36 @@ passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
 
 // Retrieves the button info now that all of the unneeded ones have been removed
 var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
+var numButtons = allButtons.length
+
+console.log('Checking metadata:', metadata)
+if (metadata != null) { // Move on if there is already a value
+  metadata = metadata.match(new RegExp('[^ ]+', 'g'))
+  console.log(metadata)
+  leftoverTime = parseInt(metadata[0])
+  var lastTimeStamp = parseInt(metadata[1])
+  console.log('Original leftover time:', leftoverTime)
+  var timeSinceLast = Date.now() - lastTimeStamp
+  leftoverTime = leftoverTime - timeSinceLast
+  console.log('New leftover time:', leftoverTime)
+  if (leftoverTime <= 0) { // If time has run out, then block, auto-advance, and set to missed value if applicable
+    leftoverTime = 0
+    complete = true
+    console.log('About to block input')
+    blockInput()
+
+    if (!checkComplete()) { // If the field does not have a value, but time has run out, then set to "missed" value.
+      setAnswer(missed)
+    }
+
+    if (autoAdvance) {
+      goToNextField()
+    }
+  } // End time has run out
+} // End metadata not blank
+
 
 // Changes checkboxes to radio buttons if select_one
-var numButtons = allButtons.length
 if (fieldType === 'select_one') { // Changes input type
   for (var b = 0; b < numButtons; b++) {
     allButtons[b].type = 'radio'
@@ -396,6 +400,8 @@ function blockInput () {
   if (block) {
     if (appearance.indexOf('minimal') !== -1) {
       selectDropDownContainer.disabled = true // Disable 'minimal' container
+    } else if (appearance.indexOf('likert') !== -1) {
+
     } else {
       for (var b = 0; b < numButtons; b++) {
         allButtons[b].disabled = true
