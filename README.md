@@ -3,9 +3,9 @@
 ![Quick appearance](extras/readme-images/quick.png)  
 *select_one* with "quick" *appearance*
 
-| numeric | select_one | select_multiple |
-| --- | --- | --- |
-| <img src="extras/readme-images/numeric.png" alt="numeric" title="numeric" width="100px"/> | <img src="extras/readme-images/select_one.png" alt="select_one" title="select_one" width="100px"/> | <img src="extras/readme-images/select_multiple.png" alt="select_multiple" title="select_multiple" width="100px"/> |
+| Time ran out | Answered | `nochange` | Milliseconds
+| --- | --- | --- | --- |
+| <img src="extras/readme-images/no-advance.png" alt="blocked" title="blocked" width="100px"/> | <img src="extras/readme-images/no-advance-block.png" alt="select_one" title="select_one" width="100px"/> | <img src="extras/readme-images/nochange.png" alt="select_multiple" title="select_multiple" width="100px"/> | <img src="extras/readme-images/milliseconds.png" alt="Milliseconds" title="Milliseconds" width="100px"/> |
 
 ## Description
 
