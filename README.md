@@ -9,7 +9,7 @@
 
 ## Description
 
-Use this field plug-in when you would like to time a *select_one* and/or *select_multiple* field.
+Use this field plug-in when you would like to time a *select_one* and/or *select_multiple* field. If you need to time a *text, integer,* or *decimal* field, use the [timed-advance](https://github.com/surveycto/timed-advance) field plug-in.
 
 If a user attempts to return to a field using this field plug-in when it has already been completed, the field will block the answers and auto-advance (this can be changed in the **Parameters**; see below for more info). If the respondent leaves the field, they can come back, the time while they are gone is still counted, and they can continue with time they have left. For example, if they leave the field while there are 15 seconds remaining, then come back 5 seconds later, there will be 10 seconds remaining on the timer.
 
