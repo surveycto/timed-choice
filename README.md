@@ -5,7 +5,7 @@
 
 | Time ran out | Answered | `nochange` | Milliseconds
 | --- | --- | --- | --- |
-| <img src="extras/readme-images/no-advance.png" alt="blocked" title="blocked" width="100px"/> | <img src="extras/readme-images/no-advance-block.png" alt="select_one" title="select_one" width="100px"/> | <img src="extras/readme-images/nochange.png" alt="select_multiple" title="select_multiple" width="100px"/> | <img src="extras/readme-images/milliseconds.png" alt="Milliseconds" title="Milliseconds" width="100px"/> |
+| <img src="extras/readme-images/no-advance.png" alt="blocked" title="blocked" width="150px"/> | <img src="extras/readme-images/no-advance-block.png" alt="select_one" title="select_one" width="150px"/> | <img src="extras/readme-images/nochange.png" alt="select_multiple" title="select_multiple" width="150px"/> | <img src="extras/readme-images/milliseconds.png" alt="Milliseconds" title="Milliseconds" width="150px"/> |
 
 ## Description
 
