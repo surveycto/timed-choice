@@ -269,12 +269,13 @@ function clearAnswer () {
       selectedOption.classList.remove('selected')
     }
   } else { // all other appearances
-    var selectedOption = document.querySelector('input[name="opt"]:checked')
-    if (selectedOption) {
+    for (var b = 0; b < numButtons; b++) {
+      var selectedOption = buttons[b]
       selectedOption.checked = false
       selectedOption.parentElement.classList.remove('selected')
     }
   }
+  setAnswer('')
 }
 
 function checkComplete () { // Returns true if any of the choices has a CHOICE_SELECTED value of true. Otherwise, returns false.
