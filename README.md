@@ -49,7 +49,7 @@ You can use this field to create a timed [field list](https://docs.surveycto.com
 
 **To use this field plug-in as-is:**
 
-1. Download the [sample form](extras/sample-form) from this repo and upload it to your SurveyCTO server.
+1. Download the [sample form](https://github.com/surveycto/timed-choice/raw/master/extras/sample-form/Timed%20choice.xlsx) from this repo and upload it to your SurveyCTO server.
 1. Download the [timed-choice.fieldplugin.zip](https://github.com/surveycto/timed-choice/raw/master/timed-choice.fieldplugin.zip) file from this repo, and attach it to the sample form on your SurveyCTO server.
 1. Adjust the parameter if you would like to use a different unit (see below).
 
@@ -95,7 +95,7 @@ If the field is of type *select_one*, you would like it to have the `quick` appe
 
     quick custom-timed-choice(duration=15)
 
-For more examples, check out the [sample form](extras/sample-form).
+For more examples, check out the [sample form](https://github.com/surveycto/timed-choice/raw/master/extras/sample-form/Timed%20choice.xlsx).
 
 ### Working with field lists
 
@@ -104,6 +104,8 @@ This field plug-in works well with field lists, but also consider using our [tim
 Besides the top field, each field should have a `disp` value of `0`. That way, the timer is not shown for each field. There is also no need to specify the `unit` parameter for non-top fields.
 
 All fields should have the same `duration` value. To make sure of this, it may be a good idea to store the duration in a field (such as a static value in a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html)), and then use a field reference to that field as the `duration` value for each field in the field list. That way, it is easy to keep track of and change the duration of each field in the field list.
+
+For an example, see the group "fieldlist" in the sample form.
 
 ## More resources
 
