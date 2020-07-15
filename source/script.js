@@ -43,29 +43,6 @@ var complete = false
 var currentAnswer
 var allChoices = []
 
-if (metadata != null) {
-  metadata = metadata.match(new RegExp('[^ ]+', 'g'))
-  leftoverTime = parseInt(metadata[0])
-  var lastTimeStamp = parseInt(metadata[1])
-  var timeSinceLast = Date.now() - lastTimeStamp
-  leftoverTime = leftoverTime - timeSinceLast
-  if (leftoverTime <= 0) { // If time has run out, then block, auto-advance, and set to missed value if applicable
-    leftoverTime = 0
-    complete = true
-    if (block) {
-      blockInput()
-    }
-
-    if (!checkComplete()) { // If the field does not have a value, but time has run out, then set to "missed" value.
-      setAnswer(missed)
-    }
-
-    if (autoAdvance) {
-      goToNextField()
-    }
-  } // End time has run out
-} // End metadata not blank
-
 // Default parameter values
 // Setup defaults of parameters if they are not defined
 if (dispTimer === 0) {
@@ -122,6 +99,29 @@ if (allChoices.indexOf(missed) === -1) {
   document.querySelector('#error').innerHTML = 'Error: ' + errorMessage
   throw new Error(errorMessage)
 }
+
+if (metadata != null) { // Move on if there is already a value
+  metadata = metadata.match(new RegExp('[^ ]+', 'g'))
+  leftoverTime = parseInt(metadata[0])
+  var lastTimeStamp = parseInt(metadata[1])
+  var timeSinceLast = Date.now() - lastTimeStamp
+  leftoverTime = leftoverTime - timeSinceLast
+  if (leftoverTime <= 0) { // If time has run out, then block, auto-advance, and set to missed value if applicable
+    leftoverTime = 0
+    complete = true
+    if (block) {
+      blockInput()
+    }
+
+    if (!checkComplete()) { // If the field does not have a value, but time has run out, then set to "missed" value.
+      setAnswer(missed)
+    }
+
+    if (autoAdvance) {
+      goToNextField()
+    }
+  } // End time has run out
+} // End metadata not blank
 
 if (appearance.indexOf('label') === -1) { // Check if it has the "label" or "list-nolabel" appearance
   labelOrLnl = false
@@ -354,8 +354,9 @@ function isRTL (s) {
 // TIME FUNCTIONS
 
 function timer () {
+  var timeNow = Date.now()
   if (!complete) {
-    timePassed = Date.now() - startTime
+    timePassed = timeNow - startTime
     timeLeft = timeStart - timePassed
   }
 
@@ -368,12 +369,12 @@ function timer () {
     if ((currentAnswer == null) || (currentAnswer === '') || (Array.isArray(currentAnswer) && (currentAnswer.length === 0))) {
       setAnswer(missed)
     }
-    setMetaData(0)
+    setMetaData('0' + ' ' + String(timeNow))
     if (autoAdvance) {
       goToNextField()
     }
   }
-  setMetaData(timeLeft)
+  setMetaData(String(timeLeft) + ' ' + String(timeNow))
 
   if (dispTimer) {
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
