@@ -58,8 +58,16 @@ if ((timeStart == null) || isNaN(timeStart)) {
   timeStart *= 1000
 }
 
-if (isNaN(unit)) {
+// Timing calculations
+if (unit === 'ms') {
+  round = 1
+} else if (unit === 'cs') {
+  round = 10
+} else if (unit === 'ds') {
+  round = 100
+} else {
   unit = 's'
+  round = 1000
 }
 unitDisp.innerHTML = unit
 
@@ -237,21 +245,6 @@ if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
       change.apply(this) // call the change() function and tell it which value was selected
     }
   }
-}
-
-// Timing calculations
-if (unit === 'ms') {
-  unit = 'milliseconds'
-  round = 1
-} else if (unit === 'cs') {
-  unit = 'centiseconds'
-  round = 10
-} else if (unit === 'ds') {
-  unit = 'deciseconds'
-  round = 100
-} else {
-  unit = 'seconds'
-  round = 1000
 }
 
 establishTimeLeft()
