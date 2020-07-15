@@ -11,7 +11,7 @@
 
 Use this field plug-in when you would like to time a *select_one* and/or *select_multiple* field.
 
-If a user attempts to return to a field with this field plug-in that has already been completed, the field will auto-advance (unless parameter 4 is equal to `1` and there was time left, see **Parameters** below for more info).
+If a user attempts to return to a field using this field plug-in when it has already been completed, the field will auto-advance (unless parameter 4 is equal to `1` and there was time left, see **Parameters** below for more info).
 
 You can use this field to create a timed [field list](https://docs.surveycto.com/02-designing-forms/04-sample-forms/05.field-lists.html) (multiple fields on the same page), but also consider using our [timed-field-list](https://github.com/surveycto/timed-field-list) field plug-in.
 
