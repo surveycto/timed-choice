@@ -28,11 +28,11 @@ var dispTimer = getPluginParameter('disp')
 var timeStart = getPluginParameter('duration')
 var unit = getPluginParameter('unit')
 var missed = getPluginParameter('pass')
-var resume = getPluginParameter('resume')
 var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var nochange = getPluginParameter('nochange')
-var leftoverTime = parseInt(getMetaData())
+var metadata = getMetaData()
+var leftoverTime
 
 // Time and other vars
 var startTime // This will get an actual value when the timer starts in startStopTimer()
@@ -42,6 +42,29 @@ var timePassed = 0 // Time passed so far
 var complete = false
 var currentAnswer
 var allChoices = []
+
+if (metadata != null) {
+  metadata = metadata.match(new RegExp('[^ ]+', 'g'))
+  leftoverTime = parseInt(metadata[0])
+  var lastTimeStamp = parseInt(metadata[1])
+  var timeSinceLast = Date.now() - lastTimeStamp
+  leftoverTime = leftoverTime - timeSinceLast
+  if (leftoverTime <= 0) { // If time has run out, then block, auto-advance, and set to missed value if applicable
+    leftoverTime = 0
+    complete = true
+    if (block) {
+      blockInput()
+    }
+
+    if (!checkComplete()) { // If the field does not have a value, but time has run out, then set to "missed" value.
+      setAnswer(missed)
+    }
+
+    if (autoAdvance) {
+      goToNextField()
+    }
+  }
+}
 
 // Default parameter values
 // Setup defaults of parameters if they are not defined
@@ -81,36 +104,10 @@ if (block === 0) {
   block = true
 }
 
-if (resume === 1) {
-  resume = true
-} else {
-  resume = false
-}
-
 if (nochange === 1) {
   nochange = true
 } else {
   nochange = false
-}
-
-if (checkComplete()) { // If there is already a set answer when the field first appears, then this statement is true
-  if (nochange) {
-    blockInput()
-    complete = true
-  }
-
-  if (!resume) {
-    complete = true
-    if (block) {
-      blockInput()
-    }
-
-    if (autoAdvance) {
-      goToNextField()
-    }
-  } // End cannot resume field
-} else { // If not complete yet
-  setAnswer(missed) // This is so if the respondent leaves the field, then the answer will already be set. Only set if there is no answer yet, as setup in the FOR loop above
 }
 
 // End default parameters
@@ -133,7 +130,7 @@ if (appearance.indexOf('label') === -1) {
 }
 
 if (labelOrLnl) {
-  choiceContainers = document.querySelectorAll('.fl-radio') // Go through all  the available choices if 'list-nolabel'
+  choiceContainers = document.querySelectorAll('.fl-radio') // Go through all  the available choices of 'list-nolabel'
 } else {
   choiceContainers = document.querySelectorAll('.choice-container') // go through all the available choices
 }
@@ -394,7 +391,7 @@ function establishTimeLeft () { // This checks the current answer and leftover t
     startTime = Date.now()
     timeLeft = timeStart
   } else {
-    timeLeft = parseInt(leftoverTime)
+    timeLeft = leftoverTime
     startTime = Date.now() - (timeStart - timeLeft)
   }
 } // End establishTimeLeft
