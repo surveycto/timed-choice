@@ -17,6 +17,9 @@ You can use this field to create a timed [field list](https://docs.surveycto.com
 
 **Important:** You need to include a choice with the value of `-99`. This choice will be hidden by the field plug-in, but it will be selected if the time runs out without a choice selected. You can change this with the `missed` parameter.
 
+![Beta](extras/readme-images/beta-release-download.jpg)
+
+*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email max@surveycto.com.*
 [![Download now](extras/readme-images/download-button.png)](https://github.com/surveycto/timed-choice/raw/master/timed-choice.fieldplugin.zip)
 
 ## Default SurveyCTO feature support
