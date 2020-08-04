@@ -3,42 +3,47 @@
 ![Quick appearance](extras/readme-images/quick.png)  
 *select_one* with "quick" *appearance*
 
-| Time ran out | Answered | `nochange` | Milliseconds
-| --- | --- | --- | --- |
-| <img src="extras/readme-images/no-advance.png" alt="blocked" title="blocked" width="150px"/> | <img src="extras/readme-images/no-advance-block.png" alt="select_one" title="select_one" width="150px"/> | <img src="extras/readme-images/nochange.png" alt="select_multiple" title="select_multiple" width="150px"/> | <img src="extras/readme-images/milliseconds.png" alt="Milliseconds" title="Milliseconds" width="150px"/> |
-
 ## Description
 
-Use this field plug-in when you would like to time a *select_one* and/or *select_multiple* field.
-
-If a user attempts to return to a field using this field plug-in when it has already been completed, the field will block the answers and auto-advance (this can be changed in the **Parameters**; see below for more info). If the respondent leaves the field, they can come back, the time while they are gone is still counted, and they can continue with time they have left. For example, if they leave the field while there are 15 seconds remaining, then come back 5 seconds later, there will be 10 seconds remaining on the timer.
-
-**Important:** You need to include a choice with the value of `-99`. This choice will be hidden by the field plug-in, but it will be selected if the time runs out without a choice selected. You can change this with the `missed` parameter.
+Use this field plug-in when there should be a time limit for responding to a *select_one* or *select_multiple* question. The user will only be able to answer this question within a certain number of seconds after first arriving at the field. For example, if they leave the field while there are 15 seconds remaining, then come back 5 seconds later, there will be 10 seconds remaining on the timer.
 
 ![Beta](extras/readme-images/beta-release-download.jpg)
 
-*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email max@surveycto.com.*
+*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email max@surveycto.com, or submit an issue to this GitHub repo.*
 
-### Feature list
+### Features
 
-* Time a *select_one* or *select_multiple* field.
-* Time a whole field list.
-* Field auto-advances and/or blocks input when time runs out. This can be changed with the parameters.
-* If time runs out before an answer is given, saves a certain choice value to indicate that time ran out. This is usually `-99`, but this can be changed with the parameters.
+* **Enforce a time limit on a field**  
+  Specify how long a user is allowed to spend answering a question. The default is 10 seconds, but you can choose your own with parameters.
+* **Enforce a time limit on a group of fields**  
+  Use this field plug-in on multiple fields in a field list group to set a time limit for a group of questions.
+* **Auto-advance when time runs out**  
+  By default, the field will auto-advance when time runs out. You can change this behavior by adjusting the parameters.
+* **Disallow changes after time runs out**  
+  By default, the user will not be able to change their answer after time has run out. You can change this behavior by adjusting the parameters.
+* **Disallow changes after a selection has been made**  
+  By default, the user will be able to change their answer as many times as they wish until the time runs out. You can change this behavior by adjusting the parameters.
+* **Specify the value to use for missed or passed answers**  
+  By default, this field plug-in will choose `-99` as the answer when the time runs out. You can change this behavior by adjusting the parameters.
+* **Customize the countdown clock appearance**  
+  * Choose which time units to show in the countdown clock.
+  * Hide the countdown clock entirely.
 
 ### Data Format
 
-The field value will be the value of the choice selected. If no choice was selected before time runs out, then the field value will be `-99` (but as previously stated, this can be changed with the parameters). A field value is not set until either a choice is selected, or time runs out.
+This field plug-in works with the `select_one` or `select_multiple` field types, and will return the choice value(s) of the selected choice(s). A field value is not set until either a choice is selected, or time runs out.
+
+**Please note:** by default, this field plug-in will attempt to select the choice value `-99` when the time runs out, so you should be sure to include a choice in your choice list that has a value of `-99` (this choice will be hidden by the field plug-in). You can choose a different value to use with the `pass` parameter.
 
 #### Metadata
 
-The field plug-in metadata stores time data. You can use this if you would like to know how much time was left when the respondent left the field. If the `advance` parameter has a value of `1`, then the time they left the field will also be the time a choice was selected. The metadata will be a space-separated list of two items: the milliseconds remaining (regardless of the value of the `unit` parameter), and the Unix time when the enumerator/respondent left the field. It is unlikely you will need that second part.
+This field plug-in stores the remaining time for the field in the field's metadata. You can use this if you would like to know how much time was left when the respondent left the field. If the `advance` parameter has a value of `1`, then the time they left the field will also be the time a choice was selected. The metadata will be a space-separated list of two items: the milliseconds remaining (regardless of the value of the `unit` parameter), and the Unix time when the enumerator/respondent left the field.
 
-So, if you would like to know how much time was remaining, use this expression in your SurveyCTO form:
+So, if you would like to know how much time is remaining for a field named `fieldname`, use this expression in your SurveyCTO form:
 
     selected-at(plug-in-metadata(${fieldname}), 0)
 
-For example, for a field called "fieldname", if the respondent left the field when there was 11,536 milliseconds remaining, then the above expression will return `11536`. To learn more, check out our documentation on [using expressions](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata).
+For example, if the respondent left the field when there was 11,536 milliseconds remaining, then the above expression will return `11536`. To learn more about how this expression works, check out our documentation on [using expressions](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata).
 
 ## How to use
 
