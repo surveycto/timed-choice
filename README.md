@@ -25,9 +25,9 @@ Use this field plug-in when there should be a time limit for responding to a *se
   By default, the user will be able to change their answer as many times as they wish until the time runs out. You can change this behavior by adjusting the parameters.
 * **Specify the value to use for missed or passed answers**  
   By default, this field plug-in will choose `-99` as the answer when the time runs out. You can change this behavior by adjusting the parameters.
-* **Customize the countdown clock appearance**  
-  * Choose which time units to show in the countdown clock.
-  * Hide the countdown clock entirely.
+* **Customize the countdown timer appearance**  
+  * Choose which time units to show in the countdown timer.
+  * Hide the countdown timer entirely.
 
 ### Data Format
 
@@ -37,66 +37,70 @@ This field plug-in works with the `select_one` or `select_multiple` field types,
 
 #### Metadata
 
-This field plug-in stores the remaining time for the field in the field's metadata. You can use this if you would like to know how much time was left when the respondent left the field. If the `advance` parameter has a value of `1`, then the time they left the field will also be the time a choice was selected. The metadata will be a space-separated list of two items: the milliseconds remaining (regardless of the value of the `unit` parameter), and the Unix time when the enumerator/respondent left the field.
+This field plug-in stores the remaining time for the field in the field's metadata. You can use this if you would like to know how much time was left when the user left the field. If the `advance` parameter has a value of `1`, then the time they left the field will also be the time a choice was selected. The metadata will be a space-separated list of two items: the milliseconds remaining (regardless of the value of the `unit` parameter), and the Unix time when the user left the field.
 
 So, if you would like to know how much time is remaining for a field named `fieldname`, use this expression in your SurveyCTO form:
 
     selected-at(plug-in-metadata(${fieldname}), 0)
 
-For example, if the respondent left the field when there was 11,536 milliseconds remaining, then the above expression will return `11536`. To learn more about how this expression works, check out our documentation on [using expressions](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata).
+For example, if the user left the field when there was 11,536 milliseconds remaining, then the above expression will return `11536`. To learn more about how this expression works, check out our documentation on [using expressions](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata).
 
 ## How to use
 
 ### Getting started
 
-**To use this field plug-in as-is**, just download the [timed-choice.fieldplugin.zip](https://github.com/surveycto/timed-choice/raw/master/timed-choice.fieldplugin.zip) file from this repo, and attach it to your form.
-
-**To use this field plug-in as-is:**
-
 1. Download the [sample form](https://github.com/surveycto/timed-choice/raw/master/extras/sample-form/Timed%20choice.xlsx) from this repo and upload it to your SurveyCTO server.
 1. Download the [timed-choice.fieldplugin.zip](https://github.com/surveycto/timed-choice/raw/master/timed-choice.fieldplugin.zip) file from this repo, and attach it to the sample form on your SurveyCTO server.
-1. Adjust the parameter if you would like to use a different unit (see below).
+1. You can use the sample form as-is, or adjust the parameters to change the behavior (see below).
 
 ### Parameters
 
-There are several parameters, but all of them are optional. The most important parameter is the `duration` parameter, but the other parameters can help you further customize the field with ease. Feel free to leave out the other parameters if their default actions work well for you.
+There are many available parameters to help you customize this field plug-in, but all of them are optional. Most likely, you will only need to set the `duration` parameter. Feel free to leave out the other parameters if their default settings work well for you.
 
 |**Name**|**Description**|**Default**|
 |---|---|---|
-|`duration`|Time in seconds before the field auto-advances. No matter what unit is used for parameter 2, you should always enter the duration in seconds.|`10`|
-|`unit`|Unit to be displayed for the time remaining. The time will be converted to the correct unit. For example, if the start time is 15 seconds, and the unit is `'ms'` for milliseconds, the time will be displayed at the start as `15000 ms`.|`'s'`|
-|`disp`|Whether the timer should be displayed or not. Most of the time, this parameter should not be included, since the timer should almost always be displayed. However, if it should not displayed for some reason, such as if it is within a field list and not the top field, then this parameter should have a value of `0`.|`1`|
-|`pass`|The value the field will be given if time runs out before an answer is given. Make sure you add a choice to your choice list with this as a value.|`-99`|
-|`advance`|Whether the field should auto-advance after time runs out. By default (such as if the parameter is not specified), when time runs out, the form will automatically advance to the next field, and the enumerator/respondent will not be able to return. If this parameter is equal to `0`, then the field will not auto-advance when time runs out.|`1`|
-|`block`|Whether the respondent can change the selection after time runs out. By default, input will be blocked after time runs out. If this parameter is equal to `0`, then an enumerator/respondent can change the selection after time runs out.|`1`|
-|`nochange`|Whether the respondent can change their answer after already selecting an answer. Normally, input will not be blocked until time runs out. If this parameter is equal to `1`, then input will be blocked as soon as a choice is selected. Not recommended for *select_multiple* fields.|`0`|
+|`duration`|Time in seconds before the field auto-advances. No matter what unit is used for the `unit` parameter, the duration specified here should always be in seconds.|`10`|
+|`unit`|The time unit to use for displaying the remaining time. For example, if there are 15 seconds remaining, and `unit` is set to `'ms'` (for milliseconds), the timer at the top of the screen will show `15000 ms`.|`'s'`|
+|`disp`|Whether the timer should be displayed or not. Most of the time, this parameter does not need to be included, since the timer should almost always be displayed. However, if it should not displayed for some reason, such as if it is within a field list and not the top field, then this parameter should have a value of `0`.|`1`|
+|`pass`|The value the field will be given if time runs out before an answer is given. Make sure your choice list includes a choice with this value.|`-99`|
+|`advance`|Whether the field should auto-advance after time runs out. By default, when time runs out the form will automatically advance to the next field, and the user will not be able to return. If this parameter is set to `0`, then the field will not auto-advance when time runs out. *Note: see exception to this default behavior below.*|`1`|
+|`block`|Whether the user can change their answer after the time runs out. By default, once the time runs out, a user will not be able to change their answer. If this parameter is set to `0`, then the user will be able to change their answer even after the time runs out.|`1`|
+|`nochange`|Whether the user can change their answer after making a selection. By default, the user will be able to change their answer as many times as they wish until the time runs out. If this parameter is set to `1`, then input will be blocked as soon as a choice is selected. *Not recommended for* select_multiple *fields*.|`0`|
 
-#### More parameter details
+#### Available values for the `unit` parameter
 
-For the `unit` parameter, you can use the following display units:
-
-|**Abbr.**|**Full name**|**Unit in 1 second**|
+|Parameter value|Unit full name|Unit in 1 second|
 |:---|:---|:---|
-|`s`|seconds|1
-|`ds`|deciseconds|10
-|`cs`|centiseconds|100
-|`ms`|milliseconds|1000
+|`'s'`|seconds|1
+|`'ds'`|deciseconds|10
+|`'cs'`|centiseconds|100
+|`'ms'`|milliseconds|1000
 
-Make sure they are in single quotes.
+*Make sure they are in single quotes, exactly as shown above.*
 
-The `advance` parameter has an exception:  If the `disp` parameter has a value of `0`, then the field will not auto-advance unless the `advance` parameter has a value of `1`. This is because timers are usually hidden in field lists so that multiple versions of the same timer are not displayed. By also turning off the auto-advance, it ensures there are not multiple calls to move to the next field, which can cause the form to skip too far ahead. If the `disp` parameter has a value of `0`, and you would still like the field to auto-advance when time runs out, set `advance` to `1`.
+#### Exception to the default behavior of the `advance` parameter
+
+The default behavior of the `advance` parameter has an exception:  if the `disp` parameter has a value of `0` (i.e., the countdown timer is hidden), then the field will not auto-advance by default. See the table below for expected behavior:
+
+|`disp` parameter|`advance` parameter|Behavior|
+|:---|:---|:---|
+|(unspecified)|(unspecified)|Auto-advance after the time runs out
+|`1`|(unspecified)|**Will not** auto-advance after the time runs out
+|`1`|`1`|Auto-advance after the time runs out
+
+This is because timers are usually hidden in field lists so that multiple versions of the same timer are not displayed. By also turning off the auto-advance, it ensures there are not multiple calls to move to the next field, which can cause the form to skip too far ahead.
 
 #### Parameter examples
 
-If you would like the field to move forward after 20 seconds, you can use this *appearance*:
+If you would like the field to move forward after 20 seconds, you can use this in the *appearance* column of a spreadsheet form definition:
 
     custom-timed-choice(duration=20)
 
-If you would like the time to be displayed in milliseconds, you can use this *appearance*:
+If you would like the time to be displayed in milliseconds, you can use this in the *appearance* column of a spreadsheet form definition:
 
     custom-timed-choice(duration=20, unit='ms')
 
-If the field is of type *select_one*, you would like it to have the `quick` appearance, and the field should last 15 seconds, you can use this *appearance*:
+If you would like your *select_one* field to have the `quick` appearance, and the field duration should be 15 seconds, you can use this in the *appearance* column of a spreadsheet form definition:
 
     quick custom-timed-choice(duration=15)
 
@@ -104,11 +108,11 @@ For more examples, check out the [sample form](https://github.com/surveycto/time
 
 #### Parameters when working with field lists
 
-This field plug-in works well with field lists, but also consider using our [timed-field-list](https://github.com/surveycto/timed-field-list/blob/master/README.md) field plug-in.
+In order to show a group of questions all on the same screen, with one countdown timer at the top that applies to all of them, you can create a field list group with many *select_one* and/or *select_multiple* fields, and use this field plug-in on each of them. While this is possible to do with this field plug-in, you should also consider using our [timed-field-list](https://github.com/surveycto/timed-field-list/blob/master/README.md) field plug-in, which is better-suited for this use-case. Here are some things to keep in mind when using this field plug-in with field lists:
 
-Besides the top field, each field should have a `disp` value of `0`. That way, the timer is not shown for each field. There is also no need to specify the `unit` parameter for non-top fields.
-
-All fields should have the same `duration` value. To make sure of this, it may be a good idea to store the duration in a field (such as a static value in a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html)), and then use a field reference to that field as the `duration` value for each field in the field list. That way, it is easy to keep track of and change the duration of each field in the field list.
+* Except for the very first field in the field list, each field should have `disp` set to `0`. That way, the timer only appears in one place, at the top of the screen.
+* All fields should have the same `duration` value. To make sure of this, it may be a good idea to store the duration value in a separate [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html), and then reference that value in the parameters of each of your field list fields.  
+  For example, you could create a calculate field named `duration_for_timed_field_list` with a default value of `30`. Then, in the appearance column of each field in your field list, you could put `custom-timed-choice(duration=${duration_for_timed_field_list})`. That way, it is easy to keep track of and change the duration of each field in the field list.
 
 For an example, see the group "fieldlist" in the sample form.
 
@@ -139,9 +143,9 @@ For an example, see the group "fieldlist" in the sample form.
 ## More resources
 
 * **Similar alternatives**  
-    * If you need to time a *text, integer,* or *decimal* field, use the [timed-advance](https://github.com/surveycto/timed-advance) field plug-in.
-    * You can use this field plug-in to create a timed [field list](https://docs.surveycto.com/02-designing-forms/04-sample-forms/05.field-lists.html) (multiple fields on the same page), but also consider using our [timed-field-list](https://github.com/surveycto/timed-field-list) field plug-in.
+  * If you need to time a *text, integer,* or *decimal* field, use the [timed-advance](https://github.com/surveycto/timed-advance) field plug-in.
+  * You can use this field plug-in to create a timed [field list](https://docs.surveycto.com/02-designing-forms/04-sample-forms/05.field-lists.html) (multiple fields on the same page), but also consider using our [timed-field-list](https://github.com/surveycto/timed-field-list) field plug-in, which is better-suited for this use-case.
 * **Sample form**  
-    You can find a form definition in this repo here: [extras/sample-form](extras/sample-form).
+  You can find a form definition in this repo here: [extras/sample-form](extras/sample-form).
 * **Developer documentation**  
-    More instructions for developing and using field plug-ins can be found here: [https://github.com/surveycto/Field-plug-in-resources](https://github.com/surveycto/Field-plug-in-resources)
+  More instructions for developing and using field plug-ins can be found here: [https://github.com/surveycto/Field-plug-in-resources](https://github.com/surveycto/Field-plug-in-resources)
