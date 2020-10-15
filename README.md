@@ -7,7 +7,7 @@
 
 Use this field plug-in when there should be a time limit for responding to a *select_one* or *select_multiple* question. The user will only be able to answer this question within a certain number of seconds after first arriving at the field. For example, if they leave the field while there are 15 seconds remaining, then come back 5 seconds later, there will be 10 seconds remaining on the timer.
 
-![Beta](extras/readme-images/beta-release-download.jpg)
+[![Beta](extras/readme-images/beta-release-download.jpg)](https://github.com/surveycto/timed-choice/raw/master/timed-choice.fieldplugin.zip)
 
 *This plug-in is currently under beta. If you you find a problem with the field plug-in, please email max@surveycto.com, or submit an issue to this GitHub repo.*
 
