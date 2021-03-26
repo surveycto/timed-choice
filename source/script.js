@@ -31,6 +31,7 @@ var missed = getPluginParameter('pass')
 var autoAdvance = getPluginParameter('advance')
 var block = getPluginParameter('block')
 var nochange = getPluginParameter('nochange')
+var autoset = getPluginParameter('autoset')
 var metadata = getMetaData()
 var leftoverTime
 
@@ -368,6 +369,10 @@ function timer () {
     }
   }
   setMetaData(String(timeLeft) + ' ' + String(timeNow))
+
+  if ((autoset != null) && (currentAnswer == null)) {
+    setAnswer(autoset)
+  }
 
   if (dispTimer) {
     timerDisp.innerHTML = String(Math.ceil(timeLeft / round))
