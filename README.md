@@ -9,7 +9,7 @@ Use this field plug-in when there should be a time limit for responding to a *se
 
 [![Beta](extras/readme-images/beta-release-download.jpg)](https://github.com/surveycto/timed-choice/raw/master/timed-choice.fieldplugin.zip)
 
-*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email max@surveycto.com, or submit an issue to this GitHub repo.*
+*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email support@surveycto.com, or submit an issue to this GitHub repo.*
 
 ### Features
 
