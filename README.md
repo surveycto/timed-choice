@@ -45,6 +45,10 @@ So, if you would like to know how much time is remaining for a field named `fiel
 
 For example, if the user left the field when there was 11,536 milliseconds remaining, then the above expression will return `11536`. To learn more about how this expression works, check out our documentation on [using expressions](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata).
 
+If you would like to display this value in a field in the form, it is a good idea to use that expression in a [*calculate_here* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html). With normal *calculate* fields, the plug-in-metadata() function cannot get the metadata until a value is set for the field with the field plug-in, and it will not be updated until the form is saved-and-closed. By making the field a *calculate_here* field instead, it will update whenever you pass by that field. That way, if the enumerator goes back-and-forth in the form (either on purpose or accident), the time remaining displayed will be accurate, updating when needed.
+
+If the time remaining will not be displayed in the form, or if the form is set up to be more strict when the enumerator can move forward, then it is better to use a normal *calculate* field instead.
+
 ## How to use
 
 ### Getting started
@@ -108,13 +112,22 @@ For more examples, check out the [sample form](https://github.com/surveycto/time
 
 #### Parameters when working with field lists
 
-In order to show a group of questions all on the same screen, with one countdown timer at the top that applies to all of them, you can create a field list group with many *select_one* and/or *select_multiple* fields, and use this field plug-in on each of them. While this is possible to do with this field plug-in, you should also consider using our [timed-field-list](https://github.com/surveycto/timed-field-list/blob/master/README.md) field plug-in, which is better-suited for this use-case. Here are some things to keep in mind when using this field plug-in with field lists:
+In order to show a group of questions all on the same screen, with one countdown timer at the top that applies to all of them, you can create a field list group with many *select_one* and/or *select_multiple* fields, and use this field plug-in on each of them. While this is possible to do with this field plug-in, you should also consider using our [timed-field-list](https://github.com/surveycto/timed-field-list/blob/master/README.md) field plug-in, which is better-suited for this use case. Here are some things to keep in mind when using this field plug-in with field lists:
 
 * Except for the very first field in the field list, each field should have `disp` set to `0`. That way, the timer only appears in one place, at the top of the screen.
 * All fields should have the same `duration` value. To make sure of this, it may be a good idea to store the duration value in a separate [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html), and then reference that value in the parameters of each of your field list fields.  
   For example, you could create a calculate field named `duration_for_timed_field_list` with a default value of `30`. Then, in the appearance column of each field in your field list, you could put `custom-timed-choice(duration=${duration_for_timed_field_list})`. That way, it is easy to keep track of and change the duration of each field in the field list.
 
 For an example, see the group "fieldlist" in the sample form.
+
+### More workflows: Timer only
+
+You can use the field plug-in for its timer only, maybe as part of a field list. Add the field to a normal *select_one* or *select_multiple* field. For the choice list, give it a single choice with a *value* of `-99` (or whatever the value of the `pass` parameter is). Since the "pass" choice is removed from the choice list, it will simply show the timer, without any choices. Unless the enumerator should stay on the page until the timer runs out, make sure this field is not [*required*](https://docs.surveycto.com/02-designing-forms/01-core-concepts/05.other-columns.html), since the enumerator will not be able to give the field a value by selecting a choice.
+
+#### Time remaining in another field
+
+As mentioned [above](#metadata), you can use the meta
+
 
 ### Default SurveyCTO feature support
 
