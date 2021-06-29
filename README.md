@@ -128,11 +128,6 @@ You can use the field plug-in for its timer only, maybe as part of a field list.
 
 This is demonstrated in the field list at the end of the [sample form](https://github.com/surveycto/timed-choice/raw/master/extras/sample-form/Timed%20choice.xlsx). At the top of the field list, there is a timer without any visible choices, only the hidden "pass" choice. However, when the time runs out, it will auto-advance to the next page, so the timer is effectively applied to all fields on that page, even the *text* field. However, if the field plug-in is not applied to all fields, it will not block the choices after time runs out, so a fast enumerator could still potentially change their response; this is why we usually recommend the [method above](#parameters-when-working-with-field-lists) for field lists.
 
-#### Time remaining in another field
-
-As mentioned [above](#metadata), you can use the meta
-
-
 ### Default SurveyCTO feature support
 
 | Feature / Property | Support |
