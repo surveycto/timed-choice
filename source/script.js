@@ -105,150 +105,149 @@ for (var c = 0; c < numChoices; c++) {
 if (allChoices.indexOf(missed) === -1) {
   var errorMessage = missed + ' is not specified as a choice value. Please add a choice with ' + missed + ' as a choice value, or this field plug-in will not work.'
   document.querySelector('#error').innerHTML = 'Error: ' + errorMessage
-  throw new Error(errorMessage)
-}
-
-if (appearance.indexOf('label') === -1) { // Check if it has the "label" or "list-nolabel" appearance
-  labelOrLnl = false
 } else {
-  labelOrLnl = true
-}
-
-if (labelOrLnl) {
-  choiceContainers = document.querySelectorAll('.fl-radio') // Go through all  the available choices of 'list-nolabel'
-} else {
-  choiceContainers = document.querySelectorAll('.choice-container') // go through all the available choices
-}
-
-if (!labelOrLnl) {
-  if (fieldProperties.LABEL) {
-    labelContainer.innerHTML = unEntity(fieldProperties.LABEL)
+  if (appearance.indexOf('label') === -1) { // Check if it has the "label" or "list-nolabel" appearance
+    labelOrLnl = false
+  } else {
+    labelOrLnl = true
   }
-  if (fieldProperties.HINT) {
-    hintContainer.innerHTML = unEntity(fieldProperties.HINT)
-  }
-}
 
-// Prepare the current webview, making adjustments for any appearance options
-if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) { // minimal appearance
-  removeContainer('minimal')
-  selectDropDownContainer.style.display = 'block' // show the select dropdown
-} else if (appearance.indexOf('list-nolabel') !== -1) { // list-nolabel appearance
-  removeContainer('nolabel')
-  labelContainer.parentElement.removeChild(labelContainer)
-  hintContainer.parentElement.removeChild(hintContainer)
-} else if (labelOrLnl) { // If 'label' appearance
-  removeContainer('label')
-  labelContainer.parentElement.removeChild(labelContainer)
-  hintContainer.parentElement.removeChild(hintContainer)
-} else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
-  removeContainer('likert')
-  likertContainer.style.display = 'flex' // show the likert container
-  // likert-min appearance
-  if (appearance.indexOf('likert-min') !== -1) {
-    var likertChoices = document.querySelectorAll('.likert-choice-container')
-    for (var i = 1; i < likertChoices.length - 1; i++) {
-      likertChoices[i].querySelector('.likert-choice-label').style.display = 'none' // hide all choice labels except the first and last
+  if (labelOrLnl) {
+    choiceContainers = document.querySelectorAll('.fl-radio') // Go through all  the available choices of 'list-nolabel'
+  } else {
+    choiceContainers = document.querySelectorAll('.choice-container') // go through all the available choices
+  }
+
+  if (!labelOrLnl) {
+    if (fieldProperties.LABEL) {
+      labelContainer.innerHTML = unEntity(fieldProperties.LABEL)
     }
-    likertChoices[0].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-first') // apply a special class to the first choice label
-    likertChoices[likertChoices.length - 1].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-last') // apply a special class to the last choice label
-  }
-  var likertButtons = document.querySelectorAll('div[name="opt"]')
-  var numLikert = likertButtons.length
-} else { // all other appearances
-  removeContainer('radio')
-  if (fieldProperties.LANGUAGE !== null && isRTL(fieldProperties.LANGUAGE)) {
-    radioButtonsContainer.dir = 'rtl'
-  }
-
-  // quick appearance
-  if ((appearance.indexOf('quick') !== -1) && (fieldType === 'select_one')) {
-    for (var i = 0; i < choiceContainers.length; i++) {
-      choiceContainers[i].classList.add('appearance-quick') // add the 'appearance-quick' class
-      choiceContainers[i].querySelectorAll('.choice-label-text')[0].insertAdjacentHTML('beforeend', '<svg class="quick-appearance-icon"><use xlink:href="#quick-appearance-icon" /></svg>') // insert the 'quick' icon
+    if (fieldProperties.HINT) {
+      hintContainer.innerHTML = unEntity(fieldProperties.HINT)
     }
   }
-}
 
-// Removes the "missed" value as a visible choice
-var passTd = document.querySelector('#choice-' + missed)
-passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
+  // Prepare the current webview, making adjustments for any appearance options
+  if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) { // minimal appearance
+    removeContainer('minimal')
+    selectDropDownContainer.style.display = 'block' // show the select dropdown
+  } else if (appearance.indexOf('list-nolabel') !== -1) { // list-nolabel appearance
+    removeContainer('nolabel')
+    labelContainer.parentElement.removeChild(labelContainer)
+    hintContainer.parentElement.removeChild(hintContainer)
+  } else if (labelOrLnl) { // If 'label' appearance
+    removeContainer('label')
+    labelContainer.parentElement.removeChild(labelContainer)
+    hintContainer.parentElement.removeChild(hintContainer)
+  } else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
+    removeContainer('likert')
+    likertContainer.style.display = 'flex' // show the likert container
 
-// Retrieves the button info now that all of the unneeded ones have been removed
-var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
-var numButtons = allButtons.length
-
-if (metadata != null) { // Move on if there is already a value
-  metadata = metadata.match(new RegExp('[^ ]+', 'g'))
-  leftoverTime = parseInt(metadata[0])
-  var lastTimeStamp = parseInt(metadata[1])
-  var timeSinceLast = Date.now() - lastTimeStamp
-  leftoverTime = leftoverTime - timeSinceLast
-  if (leftoverTime <= 0) { // If time has run out, then block, auto-advance, and set to missed value if applicable
-    leftoverTime = 0
-    complete = true
-    blockInput()
-
-    if (!checkComplete()) { // If the field does not have a value, but time has run out, then set to "missed" value.
-      setAnswer(missed)
+    // likert-min appearance
+    if (appearance.indexOf('likert-min') !== -1) {
+      var likertChoices = document.querySelectorAll('.likert-choice-container')
+      for (var i = 1; i < likertChoices.length - 1; i++) {
+        likertChoices[i].querySelector('.likert-choice-label').style.display = 'none' // hide all choice labels except the first and last
+      }
+      likertChoices[0].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-first') // apply a special class to the first choice label
+      likertChoices[likertChoices.length - 1].querySelector('.likert-choice-label').classList.add('likert-min-choice-label-last') // apply a special class to the last choice label
+    }
+    var likertButtons = document.querySelectorAll('div[name="opt"]')
+    var numLikert = likertButtons.length
+  } else { // all other appearances
+    removeContainer('radio')
+    if (fieldProperties.LANGUAGE !== null && isRTL(fieldProperties.LANGUAGE)) {
+      radioButtonsContainer.dir = 'rtl'
     }
 
-    if (autoAdvance) {
-      goToNextField()
+    // quick appearance
+    if ((appearance.indexOf('quick') !== -1) && (fieldType === 'select_one')) {
+      for (var i = 0; i < choiceContainers.length; i++) {
+        choiceContainers[i].classList.add('appearance-quick') // add the 'appearance-quick' class
+        choiceContainers[i].querySelectorAll('.choice-label-text')[0].insertAdjacentHTML('beforeend', '<svg class="quick-appearance-icon"><use xlink:href="#quick-appearance-icon" /></svg>') // insert the 'quick' icon
+      }
     }
-  } // End time has run out
-} // End metadata not blank
-
-
-// Changes checkboxes to radio buttons if select_one
-if (fieldType === 'select_one') { // Changes input type
-  for (var b = 0; b < numButtons; b++) {
-    allButtons[b].type = 'radio'
   }
-}
 
-// minimal appearance
-if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
-  selectDropDownContainer.onchange = change // when the select dropdown is changed, call the change() function (which will update the current value)
-} else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
-  for (var i = 0; i < numLikert; i++) {
-    likertButtons[i].onclick = function () {
-      if (!complete) {
-        // clear previously selected option (if any)
-        var selectedOption = document.querySelector('.likert-input-button.selected')
-        if (selectedOption) {
+  // Removes the "missed" value as a visible choice
+  var passTd = document.querySelector('#choice-' + missed)
+  passTd.parentElement.removeChild(passTd) // Remove the pass value as a label
+
+  // Retrieves the button info now that all of the unneeded ones have been removed
+  var allButtons = document.querySelectorAll('input[name="opt"]') // This is declared here so the unneeded boxes have already been removed.
+  var numButtons = allButtons.length
+
+  if (metadata != null) { // Move on if there is already a value
+    metadata = metadata.match(new RegExp('[^ ]+', 'g'))
+    leftoverTime = parseInt(metadata[0])
+    var lastTimeStamp = parseInt(metadata[1])
+    var timeSinceLast = Date.now() - lastTimeStamp
+    leftoverTime = leftoverTime - timeSinceLast
+    if (leftoverTime <= 0) { // If time has run out, then block, auto-advance, and set to missed value if applicable
+      leftoverTime = 0
+      complete = true
+      blockInput()
+
+      if (!checkComplete()) { // If the field does not have a value, but time has run out, then set to "missed" value.
+        setAnswer(missed)
+      }
+
+      if (autoAdvance) {
+        goToNextField()
+      }
+    } // End time has run out
+  } // End metadata not blank
+
+  // Changes checkboxes to radio buttons if select_one
+  if (fieldType === 'select_one') { // Changes input type
+    for (var b = 0; b < numButtons; b++) {
+      allButtons[b].type = 'radio'
+    }
+  }
+
+  // minimal appearance
+  if ((appearance.indexOf('minimal') !== -1) && (fieldType === 'select_one')) {
+    selectDropDownContainer.onchange = change // when the select dropdown is changed, call the change() function (which will update the current value)
+  } else if ((appearance.indexOf('likert') !== -1) && (fieldType === 'select_one')) { // likert appearance
+    for (var i = 0; i < numLikert; i++) {
+      likertButtons[i].onclick = function () {
+        if (!complete) {
+          // clear previously selected option (if any)
+          var selectedOption = document.querySelector('.likert-input-button.selected')
+          if (selectedOption) {
+            selectedOption.classList.remove('selected')
+          }
+          this.classList.add('selected') // mark clicked option as selected
+          change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
+
+          if (nochange) {
+            complete = true // This is so it knows to dissalow input when an answer is set
+          }
+        }
+      }
+    }
+  } else { // all other appearances
+    if (fieldType === 'select_one') { // Change to radio buttons if select_one
+      for (var i = 0; i < numButtons; i++) {
+        allButtons[i].type = 'radio'
+      }
+    }
+    for (var i = 0; i < numButtons; i++) {
+      allButtons[i].onchange = function () {
+        // remove 'selected' class from a previously selected option (if any)
+        var selectedOption = document.querySelector('.choice-container.selected')
+        if ((selectedOption) && (fieldType === 'select_one')) {
           selectedOption.classList.remove('selected')
         }
-        this.classList.add('selected') // mark clicked option as selected
-        change.apply({ value: this.getAttribute('data-value') }) // call the change() function and tell it which value was selected
-
-        if (nochange) {
-          complete = true // This is so it knows to dissalow input when an answer is set
-        }
+        this.parentElement.classList.add('selected') // add 'selected' class to the new selected option
+        change.apply(this) // call the change() function and tell it which value was selected
       }
     }
   }
-} else { // all other appearances
-  if (fieldType === 'select_one') { // Change to radio buttons if select_one
-    for (var i = 0; i < numButtons; i++) {
-      allButtons[i].type = 'radio'
-    }
-  }
-  for (var i = 0; i < numButtons; i++) {
-    allButtons[i].onchange = function () {
-      // remove 'selected' class from a previously selected option (if any)
-      var selectedOption = document.querySelector('.choice-container.selected')
-      if ((selectedOption) && (fieldType === 'select_one')) {
-        selectedOption.classList.remove('selected')
-      }
-      this.parentElement.classList.add('selected') // add 'selected' class to the new selected option
-      change.apply(this) // call the change() function and tell it which value was selected
-    }
-  }
-}
 
-establishTimeLeft()
-setInterval(timer, 1)
+  establishTimeLeft()
+  setInterval(timer, 1)
+} // End "pass" value found
 
 // FUNCTIONS
 
